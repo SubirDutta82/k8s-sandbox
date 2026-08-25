@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo-app
+  namespace: apps
+spec:
+  template:
+    spec:
+      containers:
+      - name: odoo
+        readinessProbe:
+          httpGet:
+            path: /web/login
+            port: 8069
+          initialDelaySeconds: 40
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 5
+        livenessProbe:
+          httpGet:
+            path: /web/login
+            port: 8069
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 5
+        resources:
+          requests:
+            cpu: "300m"
+            memory: "512Mi"
+          limits:
+            cpu: "1"
+            memory: "1536Mi"
