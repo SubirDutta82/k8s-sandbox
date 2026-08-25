@@ -62,13 +62,19 @@ kubectl create namespace database --dry-run=client -o yaml | kubectl apply -f -
 kubectl create namespace apps     --dry-run=client -o yaml | kubectl apply -f -
 
 # ---------- 3. Secret (never store plaintext creds in a committed manifest) ----------
-log "🔐 Creating/updating Postgres credentials Secret..."
-kubectl create secret generic postgres-credentials \
-  --namespace database \
-  --from-literal=POSTGRES_DB=postgres \
-  --from-literal=POSTGRES_USER=odoo_user \
-  --from-literal=POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" \
-  --dry-run=client -o yaml | kubectl apply -f -
+# NOTE: Secrets are namespace-scoped. Postgres reads it via envFrom in the
+# 'database' namespace; Odoo reads it via secretKeyRef in the 'apps' namespace.
+# It must exist in BOTH namespaces or Odoo's pod will fail with
+# "secret postgres-credentials not found".
+log "🔐 Creating/updating Postgres credentials Secret (database + apps namespaces)..."
+for ns in database apps; do
+  kubectl create secret generic postgres-credentials \
+    --namespace "$ns" \
+    --from-literal=POSTGRES_DB=postgres \
+    --from-literal=POSTGRES_USER=odoo_user \
+    --from-literal=POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" \
+    --dry-run=client -o yaml | kubectl apply -f -
+done
 
 # ---------- 4. App manifest (references the Secret, adds probes/limits) ----------
 log "📝 Generating application manifest..."
@@ -183,22 +189,25 @@ spec:
           httpGet:
             path: /web/login
             port: 8069
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
+          initialDelaySeconds: 40
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 5
         livenessProbe:
           httpGet:
             path: /web/login
             port: 8069
           initialDelaySeconds: 60
-          periodSeconds: 20
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 5
         resources:
           requests:
-            cpu: "200m"
+            cpu: "300m"
             memory: "512Mi"
           limits:
-            cpu: "500m"
-            memory: "1Gi"
+            cpu: "1"
+            memory: "1536Mi"
 ---
 apiVersion: v1
 kind: Service
@@ -235,8 +244,8 @@ kubectl -n database rollout status deployment/enterprise-postgres --timeout=120s
 log "📦 Applying remaining application manifests (Odoo, quotas)..."
 kubectl apply -f "$APP_MANIFEST"
 
-log "⏳ Waiting for Odoo to become ready (this can take 60-90s on first pull)..."
-kubectl -n apps rollout status deployment/odoo-app --timeout=180s
+log "⏳ Waiting for Odoo to become ready (the image is ~600MB, first pull can take several minutes on a normal connection)..."
+kubectl -n apps rollout status deployment/odoo-app --timeout=420s
 
 # ---------- 5. Observability ----------
 log "📊 Setting up Prometheus & Grafana via Helm..."
