@@ -62,6 +62,18 @@ fi
 
 kubectl config use-context "k3d-${CLUSTER_NAME}" >/dev/null
 
+# ---------- 1b. Wait for the cluster to be truly ready, not just "created" ----------
+# k3d reporting "created successfully" only means the control plane answered —
+# it does NOT guarantee node readiness or that in-cluster controllers like the
+# local-path-provisioner (needed to bind our PVC) have finished starting.
+# Racing ahead of this causes PVCs to sit unbound and deployments to time out.
+log "⏳ Waiting for all nodes to report Ready..."
+kubectl wait --for=condition=Ready nodes --all --timeout=120s
+
+log "⏳ Waiting for core cluster components (CoreDNS, local-path-provisioner) to be ready..."
+kubectl -n kube-system rollout status deployment/coredns --timeout=90s || true
+kubectl -n kube-system rollout status deployment/local-path-provisioner --timeout=90s || true
+
 # ---------- 2. Namespaces ----------
 log "📂 Ensuring namespaces exist..."
 kubectl create namespace database --dry-run=client -o yaml | kubectl apply -f -
@@ -260,7 +272,7 @@ kubectl apply -f "$APP_MANIFEST" --selector=app=postgres 2>/dev/null || \
   kubectl apply -f <(awk '/^---$/{c++} c<=2' "$APP_MANIFEST")
 
 log "⏳ Waiting for Postgres to be ready before starting Odoo (dependency ordering)..."
-kubectl -n database rollout status deployment/enterprise-postgres --timeout=120s
+kubectl -n database rollout status deployment/enterprise-postgres --timeout=180s
 
 log "📦 Applying remaining application manifests (Odoo, quotas)..."
 kubectl apply -f "$APP_MANIFEST"
