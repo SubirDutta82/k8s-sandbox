@@ -108,22 +108,25 @@ spec:
           httpGet:
             path: /web/login
             port: 8069
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
+          initialDelaySeconds: 40
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 5
         livenessProbe:
           httpGet:
             path: /web/login
             port: 8069
           initialDelaySeconds: 60
-          periodSeconds: 20
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 5
         resources:
           requests:
-            cpu: "200m"
+            cpu: "300m"
             memory: "512Mi"
           limits:
-            cpu: "500m"
-            memory: "1Gi"
+            cpu: "1"
+            memory: "1536Mi"
 ---
 apiVersion: v1
 kind: Service
