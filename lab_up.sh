@@ -8,9 +8,15 @@ set -euo pipefail
 # ---------- Config ----------
 CLUSTER_NAME="enterprise-lab"
 APP_MANIFEST="odoo-multi-ns.yaml"
-POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$(openssl rand -base64 18)}"
 MONITORING_NS="monitoring"
 LOG_FILE="lab-up.log"
+
+# Track whether the caller explicitly exported a password before we default it.
+PASSWORD_WAS_EXPLICIT=true
+if [ -z "${POSTGRES_PASSWORD:-}" ]; then
+  PASSWORD_WAS_EXPLICIT=false
+fi
+POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$(openssl rand -base64 18)}"
 
 # ---------- Helpers ----------
 log() {
@@ -66,6 +72,21 @@ kubectl create namespace apps     --dry-run=client -o yaml | kubectl apply -f -
 # 'database' namespace; Odoo reads it via secretKeyRef in the 'apps' namespace.
 # It must exist in BOTH namespaces or Odoo's pod will fail with
 # "secret postgres-credentials not found".
+#
+# SAFETY CHECK: Postgres only applies POSTGRES_PASSWORD on its first-ever
+# initdb. If Postgres is already running (data already initialized) and this
+# script generates a NEW random password, the Secret and the running database
+# fall out of sync and Odoo starts failing to authenticate. So: if Postgres
+# already exists and the caller did NOT explicitly export a password, reuse
+# whatever password is already sitting in the existing Secret instead of
+# the freshly-generated random one.
+if [ "$PASSWORD_WAS_EXPLICIT" = false ] && kubectl get deployment enterprise-postgres -n database >/dev/null 2>&1; then
+  log "⚠️  Postgres already exists and no POSTGRES_PASSWORD was exported — reusing the existing Secret's password to avoid breaking Odoo's DB auth."
+  EXISTING_PASSWORD="$(kubectl get secret postgres-credentials -n database -o jsonpath='{.data.POSTGRES_PASSWORD}' 2>/dev/null | base64 -d || true)"
+  [ -n "$EXISTING_PASSWORD" ] || fail "Postgres deployment exists but its Secret's password couldn't be read. Export POSTGRES_PASSWORD manually and rerun."
+  POSTGRES_PASSWORD="$EXISTING_PASSWORD"
+fi
+
 log "🔐 Creating/updating Postgres credentials Secret (database + apps namespaces)..."
 for ns in database apps; do
   kubectl create secret generic postgres-credentials \
