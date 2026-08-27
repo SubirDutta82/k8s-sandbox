@@ -340,12 +340,26 @@ fi
 helm repo update
 
 log "📥 Downloading and installing kube-prometheus-stack (large chart + several container images — this is the slowest step, can take 5-15+ min on a modest connection)..."
+# NOTE: helm's own --timeout is NOT a hard guarantee. Its --wait mechanism uses
+# a Kubernetes watch connection that can silently stall on flaky/NAT'd networks
+# (common under WSL2), causing helm to hang well past its stated --timeout
+# without ever returning or erroring. We wrap it in the coreutils `timeout`
+# command for a real, unconditional wall-clock kill, so retry_cmd can actually
+# retry instead of blocking forever on one stuck attempt.
 run_with_heartbeat "Prometheus/Grafana Helm install" "$MONITORING_NS" \
-  retry_cmd 3 20 helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+  retry_cmd 3 20 timeout --signal=TERM --kill-after=15 600 \
+  helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
   --create-namespace \
   --namespace "$MONITORING_NS" \
   --set grafana.adminPassword="admin" \
-  --wait --timeout 10m
+  --wait --timeout 9m
+
+# Belt-and-braces: even if the helm wait itself was flaky, verify the release
+# actually landed in a healthy state before declaring success.
+helm_status="$(helm status monitoring -n "$MONITORING_NS" -o json 2>/dev/null | grep -o '"status":"[a-zA-Z-]*"' | head -1 || true)"
+if [ -n "$helm_status" ] && ! echo "$helm_status" | grep -q "deployed"; then
+  log "⚠️  Helm release status is '${helm_status}', not 'deployed'. Check manually with: helm status monitoring -n ${MONITORING_NS}"
+fi
 
 # ---------- 6. Summary ----------
 log "=================================================="
