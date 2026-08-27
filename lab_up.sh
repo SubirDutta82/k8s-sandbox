@@ -45,6 +45,38 @@ retry_cmd() {
   done
 }
 
+# Run a long-running command in the background while printing periodic
+# "still working" status lines to the log — gives visibility into slow
+# steps (image pulls, chart downloads) without needing a second terminal.
+# Usage: run_with_heartbeat "description" "namespace-to-snapshot-or-empty" cmd args...
+run_with_heartbeat() {
+  local desc="$1" watch_ns="$2"
+  shift 2
+  log "▶️  ${desc}..."
+  ("$@") &
+  local cmd_pid=$!
+  local elapsed=0
+  local interval=15
+  while kill -0 "$cmd_pid" 2>/dev/null; do
+    sleep "$interval"
+    elapsed=$((elapsed + interval))
+    kill -0 "$cmd_pid" 2>/dev/null || break
+    if [ -n "$watch_ns" ]; then
+      local snapshot
+      snapshot=$(kubectl get pods -n "$watch_ns" --no-headers 2>/dev/null | awk '{printf "%s:%s  ", $1, $2}')
+      log "⏳ (${elapsed}s elapsed) ${desc} — pods: ${snapshot:-not created yet}"
+    else
+      log "⏳ (${elapsed}s elapsed) ${desc}..."
+    fi
+  done
+  wait "$cmd_pid"
+  local status=$?
+  if [ "$status" -ne 0 ]; then
+    fail "${desc} failed after ${elapsed}s (exit code ${status})"
+  fi
+  log "✅ ${desc} completed in ${elapsed}s"
+}
+
 trap 'log "❌ Script failed at line $LINENO. See $LOG_FILE for details."' ERR
 
 check_deps() {
@@ -70,7 +102,8 @@ if k3d cluster list 2>/dev/null | awk '{print $1}' | grep -qx "$CLUSTER_NAME"; t
   log "✅ Cluster '$CLUSTER_NAME' already exists — skipping creation."
 else
   log "🏗️  Spinning up k3d cluster '$CLUSTER_NAME' (1 server + 2 agents)..."
-  k3d cluster create "$CLUSTER_NAME" \
+  run_with_heartbeat "Creating k3d cluster" "" \
+    k3d cluster create "$CLUSTER_NAME" \
     --servers 1 \
     --agents 2 \
     --wait \
@@ -289,13 +322,15 @@ kubectl apply -f "$APP_MANIFEST" --selector=app=postgres 2>/dev/null || \
   kubectl apply -f <(awk '/^---$/{c++} c<=2' "$APP_MANIFEST")
 
 log "⏳ Waiting for Postgres to be ready before starting Odoo (dependency ordering)..."
-kubectl -n database rollout status deployment/enterprise-postgres --timeout=180s
+run_with_heartbeat "Postgres rollout" "database" \
+  kubectl -n database rollout status deployment/enterprise-postgres --timeout=180s
 
 log "📦 Applying remaining application manifests (Odoo, quotas)..."
 kubectl apply -f "$APP_MANIFEST"
 
 log "⏳ Waiting for Odoo to become ready (the image is ~600MB, first pull can take several minutes on a normal connection)..."
-kubectl -n apps rollout status deployment/odoo-app --timeout=420s
+run_with_heartbeat "Odoo rollout" "apps" \
+  kubectl -n apps rollout status deployment/odoo-app --timeout=420s
 
 # ---------- 5. Observability ----------
 log "📊 Setting up Prometheus & Grafana via Helm..."
@@ -304,7 +339,9 @@ if ! helm repo list 2>/dev/null | grep -q "prometheus-community"; then
 fi
 helm repo update
 
-retry_cmd 3 20 helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+log "📥 Downloading and installing kube-prometheus-stack (large chart + several container images — this is the slowest step, can take 5-15+ min on a modest connection)..."
+run_with_heartbeat "Prometheus/Grafana Helm install" "$MONITORING_NS" \
+  retry_cmd 3 20 helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
   --create-namespace \
   --namespace "$MONITORING_NS" \
   --set grafana.adminPassword="admin" \
