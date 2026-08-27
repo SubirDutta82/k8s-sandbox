@@ -188,3 +188,412 @@
 [2026-08-27 10:16:49] ⏳ Waiting for Odoo to become ready (the image is ~600MB, first pull can take several minutes on a normal connection)...
 [2026-08-27 10:16:50] 📊 Setting up Prometheus & Grafana via Helm...
 [2026-08-27 10:26:29] ⚠️  Attempt 1/3 failed. Retrying in 20s...
+[2026-08-27 10:43:36] ==================================================
+[2026-08-27 10:43:36] 🚀 STARTING KUBERNETES SANDBOX LAB (k3d)
+[2026-08-27 10:43:36] ==================================================
+[2026-08-27 10:43:36] 🔍 Checking required tools...
+[2026-08-27 10:43:38] ✅ Cluster 'enterprise-lab' already exists — skipping creation.
+[2026-08-27 10:43:39] ⏳ Waiting for all nodes to report Ready...
+[2026-08-27 10:43:41] ⏳ Waiting for core cluster components (CoreDNS, local-path-provisioner) to be ready...
+[2026-08-27 10:43:43] 📂 Ensuring namespaces exist...
+[2026-08-27 10:43:46] ⚠️  Postgres already exists and no POSTGRES_PASSWORD was exported — reusing the existing Secret's password to avoid breaking Odoo's DB auth.
+[2026-08-27 10:43:47] 🔐 Creating/updating Postgres credentials Secret (database + apps namespaces)...
+[2026-08-27 10:43:50] 📝 Generating application manifest...
+[2026-08-27 10:43:50] 📦 Applying Postgres tier first...
+[2026-08-27 10:43:53] ⏳ Waiting for Postgres to be ready before starting Odoo (dependency ordering)...
+[2026-08-27 10:43:53] ▶️  Postgres rollout...
+[2026-08-27 10:44:08] ✅ Postgres rollout completed in 15s
+[2026-08-27 10:44:08] 📦 Applying remaining application manifests (Odoo, quotas)...
+[2026-08-27 10:44:10] ⏳ Waiting for Odoo to become ready (the image is ~600MB, first pull can take several minutes on a normal connection)...
+[2026-08-27 10:44:10] ▶️  Odoo rollout...
+[2026-08-27 10:44:25] ✅ Odoo rollout completed in 15s
+[2026-08-27 10:44:25] 📊 Setting up Prometheus & Grafana via Helm...
+[2026-08-27 10:44:37] 📥 Downloading and installing kube-prometheus-stack (large chart + several container images — this is the slowest step, can take 5-15+ min on a modest connection)...
+[2026-08-27 10:44:37] ▶️  Prometheus/Grafana Helm install...
+[2026-08-27 10:44:53] ⏳ (15s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:45:09] ⏳ (30s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:45:25] ⏳ (45s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:45:41] ⏳ (60s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:45:57] ⏳ (75s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:46:13] ⏳ (90s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:46:28] ⏳ (105s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:46:45] ⏳ (120s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:47:01] ⏳ (135s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:47:17] ⏳ (150s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:47:33] ⏳ (165s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:47:49] ⏳ (180s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:48:04] ⏳ (195s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:48:20] ⏳ (210s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:48:36] ⏳ (225s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:48:52] ⏳ (240s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:49:08] ⏳ (255s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:49:24] ⏳ (270s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:49:40] ⏳ (285s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:49:58] ⏳ (300s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:50:15] ⏳ (315s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:50:32] ⏳ (330s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:50:49] ⏳ (345s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:52:26] ⏳ (360s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:53:40] ⏳ (375s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:53:56] ⏳ (390s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:54:12] ⏳ (405s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:54:29] ⏳ (420s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:54:45] ⏳ (435s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:55:01] ⏳ (450s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:55:17] ⏳ (465s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:55:33] ⏳ (480s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:55:49] ⏳ (495s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:56:05] ⏳ (510s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:56:21] ⏳ (525s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:56:37] ⏳ (540s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:56:52] ⏳ (555s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:57:08] ⏳ (570s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:57:24] ⏳ (585s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:57:40] ⏳ (600s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:57:56] ⏳ (615s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:58:13] ⏳ (630s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:58:30] ⏳ (645s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:58:47] ⏳ (660s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:59:05] ⏳ (675s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:59:21] ⏳ (690s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 10:59:38] ⏳ (705s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:00:26] ⏳ (720s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:01:27] ⏳ (735s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:02:04] ⏳ (750s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:03:30] ⏳ (765s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:03:47] ⏳ (780s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:04:03] ⏳ (795s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:04:19] ⏳ (810s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:04:35] ⏳ (825s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:04:51] ⏳ (840s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:05:07] ⏳ (855s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:05:24] ⏳ (870s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:05:40] ⏳ (885s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:05:56] ⏳ (900s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:06:12] ⏳ (915s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:06:28] ⏳ (930s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:06:45] ⏳ (945s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:07:00] ⏳ (960s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:07:17] ⏳ (975s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:07:33] ⏳ (990s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:07:50] ⏳ (1005s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:08:05] ⏳ (1020s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:08:22] ⏳ (1035s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:08:38] ⏳ (1050s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:08:55] ⏳ (1065s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:09:11] ⏳ (1080s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:09:27] ⏳ (1095s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:09:43] ⏳ (1110s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:09:59] ⏳ (1125s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:10:15] ⏳ (1140s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:10:31] ⏳ (1155s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:10:48] ⏳ (1170s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:11:05] ⏳ (1185s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:11:22] ⏳ (1200s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:11:41] ⏳ (1215s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:11:58] ⏳ (1230s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:13:18] ⏳ (1245s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:13:34] ⏳ (1260s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:13:50] ⏳ (1275s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:14:06] ⏳ (1290s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:14:23] ⏳ (1305s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:14:39] ⏳ (1320s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:14:55] ⏳ (1335s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:15:11] ⏳ (1350s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:15:27] ⏳ (1365s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:15:43] ⏳ (1380s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:16:00] ⏳ (1395s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:16:15] ⏳ (1410s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:16:32] ⏳ (1425s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:16:48] ⏳ (1440s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:17:04] ⏳ (1455s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:17:20] ⏳ (1470s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:17:36] ⏳ (1485s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:17:52] ⏳ (1500s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:18:10] ⏳ (1515s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:18:27] ⏳ (1530s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:18:47] ⏳ (1545s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:19:04] ⏳ (1560s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:19:22] ⏳ (1575s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:21:10] ⏳ (1590s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:22:17] ⏳ (1605s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:23:06] ⏳ (1620s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:23:23] ⏳ (1635s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:23:39] ⏳ (1650s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:23:56] ⏳ (1665s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:24:12] ⏳ (1680s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:24:28] ⏳ (1695s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:24:44] ⏳ (1710s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:25:00] ⏳ (1725s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:25:16] ⏳ (1740s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:25:33] ⏳ (1755s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:25:49] ⏳ (1770s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:26:05] ⏳ (1785s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:26:21] ⏳ (1800s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:26:37] ⏳ (1815s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:26:53] ⏳ (1830s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:27:10] ⏳ (1845s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:27:25] ⏳ (1860s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:27:42] ⏳ (1875s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:27:58] ⏳ (1890s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:28:15] ⏳ (1905s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:28:31] ⏳ (1920s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:28:48] ⏳ (1935s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:29:05] ⏳ (1950s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:29:23] ⏳ (1965s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:29:39] ⏳ (1980s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:29:57] ⏳ (1995s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:30:13] ⏳ (2010s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:31:30] ⏳ (2025s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:32:54] ⏳ (2040s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:34:20] ⏳ (2055s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:35:51] ⏳ (2070s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:36:44] ⏳ (2085s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:37:00] ⏳ (2100s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:37:16] ⏳ (2115s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:37:34] ⏳ (2130s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:37:50] ⏳ (2145s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:38:08] ⏳ (2160s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:38:25] ⏳ (2175s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:38:42] ⏳ (2190s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:38:58] ⏳ (2205s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:39:15] ⏳ (2220s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:39:32] ⏳ (2235s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:39:50] ⏳ (2250s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:40:06] ⏳ (2265s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:40:22] ⏳ (2280s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:40:38] ⏳ (2295s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:40:55] ⏳ (2310s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:41:10] ⏳ (2325s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:41:27] ⏳ (2340s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:41:43] ⏳ (2355s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:41:59] ⏳ (2370s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:42:15] ⏳ (2385s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:42:32] ⏳ (2400s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:42:48] ⏳ (2415s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:43:04] ⏳ (2430s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:43:21] ⏳ (2445s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:43:36] ⏳ (2460s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:43:52] ⏳ (2475s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:44:08] ⏳ (2490s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:44:24] ⏳ (2505s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:44:40] ⏳ (2520s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:44:56] ⏳ (2535s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:45:12] ⏳ (2550s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:45:28] ⏳ (2565s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:45:45] ⏳ (2580s elapsed) Prometheus/Grafana Helm install — pods: monitoring-kube-prometheus-admission-create-9jpxr:0/1  
+[2026-08-27 11:46:01] ⏳ (2595s elapsed) Prometheus/Grafana Helm install — pods: monitoring-kube-prometheus-admission-create-9jpxr:0/1  
+[2026-08-27 11:46:17] ⏳ (2610s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:46:33] ⏳ (2625s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:46:49] ⏳ (2640s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:47:06] ⏳ (2655s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:47:24] ⏳ (2670s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:47:42] ⏳ (2685s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:47:59] ⏳ (2700s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:48:17] ⏳ (2715s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:48:34] ⏳ (2730s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:50:09] ⏳ (2745s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:51:36] ⏳ (2760s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:52:58] ⏳ (2775s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:53:58] ⏳ (2790s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:54:47] ⏳ (2805s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:55:03] ⏳ (2820s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:55:20] ⏳ (2835s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:55:38] ⏳ (2850s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:55:56] ⏳ (2865s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:57:31] ⏳ (2880s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 11:59:01] ⏳ (2895s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:00:24] ⏳ (2910s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:01:35] ⏳ (2925s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:02:27] ⏳ (2940s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:02:49] ⏳ (2955s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:03:05] ⏳ (2970s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:03:22] ⏳ (2985s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:03:39] ⏳ (3000s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:03:57] ⏳ (3015s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:04:13] ⏳ (3030s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:04:31] ⏳ (3045s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:04:47] ⏳ (3060s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:05:05] ⏳ (3075s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:06:34] ⏳ (3090s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:07:57] ⏳ (3105s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:09:11] ⏳ (3120s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:10:00] ⏳ (3135s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:10:16] ⏳ (3150s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:10:32] ⏳ (3165s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:10:48] ⏳ (3180s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:11:04] ⏳ (3195s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:11:22] ⏳ (3210s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:11:38] ⏳ (3225s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:11:54] ⏳ (3240s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:12:10] ⏳ (3255s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:12:25] ⏳ (3270s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:12:42] ⏳ (3285s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:12:58] ⏳ (3300s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:13:14] ⏳ (3315s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:13:30] ⏳ (3330s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:13:46] ⏳ (3345s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:14:03] ⏳ (3360s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:14:19] ⏳ (3375s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:14:35] ⏳ (3390s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:14:51] ⏳ (3405s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:15:07] ⏳ (3420s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:15:24] ⏳ (3435s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:15:40] ⏳ (3450s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:15:56] ⏳ (3465s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:16:13] ⏳ (3480s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:16:29] ⏳ (3495s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:16:45] ⏳ (3510s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:17:01] ⏳ (3525s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:17:16] ⏳ (3540s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:17:33] ⏳ (3555s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:17:49] ⏳ (3570s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:18:05] ⏳ (3585s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:18:22] ⏳ (3600s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:18:39] ⏳ (3615s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:18:56] ⏳ (3630s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:19:15] ⏳ (3645s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:19:31] ⏳ (3660s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:19:48] ⏳ (3675s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:21:31] ⏳ (3690s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:22:44] ⏳ (3705s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:23:52] ⏳ (3720s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:25:17] ⏳ (3735s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:26:01] ⏳ (3750s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:26:18] ⏳ (3765s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:26:34] ⏳ (3780s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:26:51] ⏳ (3795s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:27:08] ⏳ (3810s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:28:00] ⏳ (3825s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:29:23] ⏳ (3840s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:30:50] ⏳ (3855s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:32:21] ⏳ (3870s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:33:09] ⏳ (3885s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:33:25] ⏳ (3900s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:33:42] ⏳ (3915s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:33:59] ⏳ (3930s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:34:15] ⏳ (3945s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:34:32] ⏳ (3960s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:35:44] ⏳ (3975s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:36:56] ⏳ (3990s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:38:18] ⏳ (4005s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:39:23] ⏳ (4020s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:40:46] ⏳ (4035s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:41:03] ⏳ (4050s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:41:19] ⏳ (4065s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:41:35] ⏳ (4080s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:41:52] ⏳ (4095s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:42:08] ⏳ (4110s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:42:25] ⏳ (4125s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:42:42] ⏳ (4140s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:42:58] ⏳ (4155s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:43:54] ⏳ (4170s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:44:58] ⏳ (4185s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:46:08] ⏳ (4200s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-08-27 12:47:54] ⏳ (4215s elapsed) Prometheus/Grafana Helm install — pods: monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:0/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:0/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:0/1  
+[2026-08-27 12:49:36] ⏳ (4230s elapsed) Prometheus/Grafana Helm install — pods: monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:0/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:0/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:0/1  
+[2026-08-27 12:50:53] ⏳ (4245s elapsed) Prometheus/Grafana Helm install — pods: monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:0/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:0/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:0/1  
+[2026-08-27 12:51:12] ⏳ (4260s elapsed) Prometheus/Grafana Helm install — pods: monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:0/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:0/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:0/1  
+[2026-08-27 12:51:29] ⏳ (4275s elapsed) Prometheus/Grafana Helm install — pods: monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:0/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:1/1  
+[2026-08-27 12:51:46] ⏳ (4290s elapsed) Prometheus/Grafana Helm install — pods: monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:0/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:1/1  
+[2026-08-27 12:52:03] ⏳ (4305s elapsed) Prometheus/Grafana Helm install — pods: monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:0/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:1/1  
+[2026-08-27 12:52:23] ⏳ (4320s elapsed) Prometheus/Grafana Helm install — pods: monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:0/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:1/1  
+[2026-08-27 12:52:44] ⏳ (4335s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:53:03] ⏳ (4350s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:53:19] ⏳ (4365s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:53:36] ⏳ (4380s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:54:01] ⏳ (4395s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:54:34] ⏳ (4410s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:0/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:0/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:55:08] ⏳ (4425s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:56:00] ⏳ (4440s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:56:31] ⏳ (4455s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:57:18] ⏳ (4470s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:57:42] ⚠️  Attempt 1/3 failed. Retrying in 20s...
+[2026-08-27 12:57:45] ⏳ (4485s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:0/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:58:31] ⏳ (4500s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:59:06] ⏳ (4515s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 12:59:40] ⏳ (4530s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:0/2  
+[2026-08-27 13:00:02] ⏳ (4545s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:1/2  
+[2026-08-27 13:00:38] ⏳ (4560s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:01:01] ⏳ (4575s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:01:25] ⏳ (4590s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:01:45] ⏳ (4605s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:02:07] ⏳ (4620s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:02:30] ⏳ (4635s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:02:53] ⏳ (4650s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:03:16] ⏳ (4665s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:03:36] ⏳ (4680s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:04:00] ⏳ (4695s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:04:21] ⏳ (4710s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:04:40] ⏳ (4725s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:0/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:05:02] ⏳ (4740s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:05:19] ⏳ (4755s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:05:41] ⏳ (4770s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:06:00] ⏳ (4785s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:07:47] ⏳ (4800s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:09:16] ⏳ (4815s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:10:51] ⏳ (4830s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:12:20] ⏳ (4845s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:14:33] ⏳ (4860s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:14:50] ⏳ (4875s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:15:07] ⏳ (4890s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:15:23] ⏳ (4905s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:15:40] ⏳ (4920s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:15:56] ⏳ (4935s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:16:13] ⏳ (4950s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:16:30] ⏳ (4965s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:16:47] ⏳ (4980s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:17:04] ⏳ (4995s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:17:22] ⏳ (5010s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:17:39] ⏳ (5025s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:17:56] ⏳ (5040s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:18:15] ⏳ (5055s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:18:34] ⏳ (5070s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:18:57] ⏳ (5085s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:19:16] ⏳ (5100s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:19:34] ⏳ (5115s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:19:56] ⏳ (5130s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:20:13] ⏳ (5145s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:26:53] ⏳ (5160s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:27:09] ⏳ (5175s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:27:26] ⏳ (5190s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:27:42] ⏳ (5205s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:28:05] ⏳ (5220s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:28:25] ⏳ (5235s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:28:48] ⏳ (5250s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:2/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:29:05] ⏳ (5265s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:29:21] ⏳ (5280s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:29:37] ⏳ (5295s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:29:54] ⏳ (5310s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:30:10] ⏳ (5325s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:30:27] ⏳ (5340s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:30:42] ⏳ (5355s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:30:59] ⏳ (5370s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:31:15] ⏳ (5385s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:31:31] ⏳ (5400s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:31:48] ⏳ (5415s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:32:04] ⏳ (5430s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:32:20] ⏳ (5445s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:32:36] ⏳ (5460s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:32:53] ⏳ (5475s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:33:10] ⏳ (5490s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:33:26] ⏳ (5505s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:33:43] ⏳ (5520s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:33:59] ⏳ (5535s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:34:16] ⏳ (5550s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:34:32] ⏳ (5565s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:34:48] ⏳ (5580s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:35:04] ⏳ (5595s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:35:20] ⏳ (5610s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:35:38] ⏳ (5625s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:35:55] ⏳ (5640s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:36:12] ⏳ (5655s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:36:30] ⏳ (5670s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:36:47] ⏳ (5685s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:37:05] ⏳ (5700s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:37:23] ⏳ (5715s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:37:40] ⏳ (5730s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:37:57] ⏳ (5745s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:38:13] ⏳ (5760s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:38:31] ⏳ (5775s elapsed) Prometheus/Grafana Helm install — pods: alertmanager-monitoring-kube-prometheus-alertmanager-0:2/2  monitoring-grafana-78465d94c8-fq94t:3/3  monitoring-kube-prometheus-operator-54bdf8dc6f-sk9zf:1/1  monitoring-kube-state-metrics-784d58965c-pr4xq:1/1  monitoring-prometheus-node-exporter-ks5xs:1/1  monitoring-prometheus-node-exporter-n2skd:1/1  monitoring-prometheus-node-exporter-tlzbl:1/1  prometheus-monitoring-kube-prometheus-prometheus-0:2/2  
+[2026-08-27 13:38:38] ⚠️  Attempt 2/3 failed. Retrying in 20s...
