@@ -28,6 +28,23 @@ fail() {
   exit 1
 }
 
+# Retry a command a few times with a delay between attempts — useful for
+# steps that hit transient network blips (e.g. downloading Helm chart
+# tarballs from a CDN on a slow connection).
+retry_cmd() {
+  local attempts="$1" delay="$2"
+  shift 2
+  local n=1
+  until "$@"; do
+    if [ "$n" -ge "$attempts" ]; then
+      fail "Command failed after $attempts attempts: $*"
+    fi
+    log "⚠️  Attempt $n/$attempts failed. Retrying in ${delay}s..."
+    n=$((n + 1))
+    sleep "$delay"
+  done
+}
+
 trap 'log "❌ Script failed at line $LINENO. See $LOG_FILE for details."' ERR
 
 check_deps() {
@@ -287,11 +304,11 @@ if ! helm repo list 2>/dev/null | grep -q "prometheus-community"; then
 fi
 helm repo update
 
-helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+retry_cmd 3 20 helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
   --create-namespace \
   --namespace "$MONITORING_NS" \
   --set grafana.adminPassword="admin" \
-  --wait --timeout 5m
+  --wait --timeout 10m
 
 # ---------- 6. Summary ----------
 log "=================================================="
