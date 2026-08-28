@@ -91,11 +91,37 @@ check_deps() {
   docker info >/dev/null 2>&1 || fail "Docker daemon isn't reachable. Is Docker/WSL2 integration running?"
 }
 
+# k3s's default single-node datastore (embedded SQLite via "kine") is known
+# to fall over under sustained concurrent write load — this stack (Postgres +
+# Odoo + the full kube-prometheus-stack) generates exactly that kind of load.
+# Under-resourced Docker/WSL2 allocations have caused the k3s server process
+# to hit "Transaction commit failed" and crash outright. This is a soft
+# warning only — it won't block the run, since the cluster usually recovers
+# on its own, but it explains the failure mode if you hit it.
+check_resources() {
+  log "🔍 Checking Docker/WSL2 resource allocation..."
+  local mem_bytes cpus
+  mem_bytes="$(docker info --format '{{.MemTotal}}' 2>/dev/null || echo 0)"
+  cpus="$(docker info --format '{{.NCPU}}' 2>/dev/null || echo 0)"
+  local mem_gb=$((mem_bytes / 1024 / 1024 / 1024))
+
+  if [ "$mem_gb" -gt 0 ] && [ "$mem_gb" -lt 6 ]; then
+    log "⚠️  Docker/WSL2 has only ~${mem_gb}GB memory allocated. Running Postgres + Odoo + the full"
+    log "⚠️  monitoring stack concurrently can push k3s's embedded SQLite datastore into failure under"
+    log "⚠️  this level of I/O pressure (symptom: 'Transaction commit failed', server restarts)."
+    log "⚠️  Consider raising the WSL2 memory limit in .wslconfig to 6-8GB+ if this recurs."
+  fi
+  if [ "$cpus" -gt 0 ] && [ "$cpus" -lt 4 ]; then
+    log "⚠️  Docker/WSL2 has only ${cpus} CPU(s) allocated. Consider raising to 4+ for this workload."
+  fi
+}
+
 # ---------- 0. Preflight ----------
 log "=================================================="
 log "🚀 STARTING KUBERNETES SANDBOX LAB (k3d)"
 log "=================================================="
 check_deps
+check_resources
 
 # ---------- 1. Cluster (idempotent) ----------
 if k3d cluster list 2>/dev/null | awk '{print $1}' | grep -qx "$CLUSTER_NAME"; then
