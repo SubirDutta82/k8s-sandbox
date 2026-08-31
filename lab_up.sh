@@ -126,12 +126,17 @@ check_resources
 # ---------- 1. Cluster (idempotent) ----------
 if k3d cluster list 2>/dev/null | awk '{print $1}' | grep -qx "$CLUSTER_NAME"; then
   log "✅ Cluster '$CLUSTER_NAME' already exists — skipping creation."
+  log "ℹ️  NOTE: port mappings (80/443 for Ingress) are only set at cluster CREATION time."
+  log "ℹ️  If this cluster was created before Ingress support was added to this script,"
+  log "ℹ️  run ./lab-down.sh then rerun this script to pick up the new port mappings."
 else
   log "🏗️  Spinning up k3d cluster '$CLUSTER_NAME' (1 server + 2 agents)..."
   run_with_heartbeat "Creating k3d cluster" "" \
     k3d cluster create "$CLUSTER_NAME" \
     --servers 1 \
     --agents 2 \
+    -p "80:80@loadbalancer" \
+    -p "443:443@loadbalancer" \
     --wait \
     --timeout 90s
 fi
@@ -387,13 +392,94 @@ if [ -n "$helm_status" ] && ! echo "$helm_status" | grep -q "deployed"; then
   log "⚠️  Helm release status is '${helm_status}', not 'deployed'. Check manually with: helm status monitoring -n ${MONITORING_NS}"
 fi
 
-# ---------- 6. Summary ----------
+# ---------- 6. Ingress (permanent, zero-terminal access via Traefik) ----------
+# k3s ships with Traefik as its default ingress controller. Combined with the
+# 80/443 port mappings on the k3d cluster, these Ingress resources give you
+# stable URLs that work with no `kubectl port-forward` running at all.
+# NOTE: this only covers HTTP(S) traffic. Postgres is a raw TCP protocol, not
+# HTTP, so it isn't (and can't be) covered by a standard Ingress — keep using
+# `kubectl port-forward` for direct Postgres access.
+log "🌐 Setting up permanent Ingress routes (Odoo, Grafana, Prometheus, Alertmanager)..."
+cat <<'EOF' > ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: odoo-ingress
+  namespace: apps
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: odoo.lab.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: odoo-service
+            port:
+              number: 8069
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitoring-ingress
+  namespace: monitoring
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: grafana.lab.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: monitoring-grafana
+            port:
+              number: 80
+  - host: prometheus.lab.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: monitoring-kube-prometheus-prometheus
+            port:
+              number: 9090
+  - host: alertmanager.lab.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: monitoring-kube-prometheus-alertmanager
+            port:
+              number: 9093
+EOF
+
+kubectl apply -f ingress.yaml
+
+# ---------- 7. Summary ----------
 log "=================================================="
 log "🎯 SUCCESS: LAB ARCHITECTURE INITIALIZED (k3d)"
 log "=================================================="
 log "Postgres password (auto-generated, stored only in the Secret): ${POSTGRES_PASSWORD}"
 log ""
-log "👉 Odoo   (http://localhost:8069): kubectl port-forward svc/odoo-service -n apps 8069:8069"
-log "👉 Grafana(http://localhost:3000): kubectl port-forward svc/monitoring-grafana -n monitoring 3000:80"
-log "   Grafana login: admin / admin"
+log "⚠️  ONE-TIME SETUP REQUIRED: add these lines to your Windows hosts file"
+log "    (C:\\Windows\\System32\\drivers\\etc\\hosts, edited as Administrator):"
+log "      127.0.0.1 odoo.lab.local"
+log "      127.0.0.1 grafana.lab.local"
+log "      127.0.0.1 prometheus.lab.local"
+log "      127.0.0.1 alertmanager.lab.local"
+log ""
+log "👉 Odoo         : http://odoo.lab.local"
+log "👉 Grafana      : http://grafana.lab.local  (login: admin / admin)"
+log "👉 Prometheus   : http://prometheus.lab.local"
+log "👉 Alertmanager : http://alertmanager.lab.local"
+log ""
+log "👉 Postgres (still needs port-forward — raw TCP, not HTTP):"
+log "   kubectl port-forward svc/enterprise-postgres -n database 5432:5432"
 log "=================================================="
