@@ -363,8 +363,31 @@ log "⏳ Waiting for Odoo to become ready (the image is ~600MB, first pull can t
 run_with_heartbeat "Odoo rollout" "apps" \
   kubectl -n apps rollout status deployment/odoo-app --timeout=420s
 
+# If a previous run left the Helm release in a bad state (any status other
+# than "deployed" — failed, pending-install, pending-upgrade, pending-rollback,
+# or simply not existing), a plain `helm upgrade --install` will hit
+# "another operation (install/upgrade/rollback) is in progress" and never
+# proceed. Rather than requiring manual cleanup every time, detect this and
+# clear the stale release history automatically before attempting install.
+ensure_clean_helm_release() {
+  local rel="$1" ns="$2"
+  local status
+  status="$(helm status "$rel" -n "$ns" -o json 2>/dev/null | grep -o '"status":"[a-zA-Z-]*"' | head -1 | cut -d'"' -f4 || true)"
+
+  if [ -z "$status" ]; then
+    return 0  # no existing release — nothing to clean
+  fi
+
+  if [ "$status" != "deployed" ]; then
+    log "⚠️  Existing Helm release '${rel}' in namespace '${ns}' has status '${status}', not 'deployed'."
+    log "⚠️  Clearing its release history so this run starts fresh (no effect on already-running pods)."
+    kubectl get secrets -n "$ns" -l "owner=helm,name=${rel}" -o name 2>/dev/null | xargs -r kubectl delete -n "$ns" || true
+  fi
+}
+
 # ---------- 5. Observability ----------
 log "📊 Setting up Prometheus & Grafana via Helm..."
+ensure_clean_helm_release "monitoring" "$MONITORING_NS"
 if ! helm repo list 2>/dev/null | grep -q "prometheus-community"; then
   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 fi
