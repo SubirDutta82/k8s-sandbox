@@ -366,9 +366,98 @@ EOF
 apply_postgres() {
   log "Applying PostgreSQL tier..."
 
-  kubectl apply -f "$APP_MANIFEST" \
-    --namespace database \
-    --selector='app=postgres'
+  kubectl apply -f - <<EOF
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-db-pvc
+  namespace: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enterprise-postgres
+  namespace: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15-alpine
+          envFrom:
+            - secretRef:
+                name: postgres-credentials
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+              subPath: pgdata
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - odoo_user
+                - -d
+                - postgres
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - odoo_user
+                - -d
+                - postgres
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 5
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+      volumes:
+        - name: pgdata
+          persistentVolumeClaim:
+            claimName: postgres-db-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: enterprise-postgres
+  namespace: database
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: postgres
+EOF
+}
 }
 
 wait_for_postgres() {
