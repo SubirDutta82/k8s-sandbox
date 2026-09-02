@@ -2574,3 +2574,78 @@
 [2026-09-01 07:59:59] ⏳ (1710s elapsed) Prometheus/Grafana Helm install — pods: not created yet
 [2026-09-01 08:00:15] ⏳ (1725s elapsed) Prometheus/Grafana Helm install — pods: not created yet
 [2026-09-01 08:00:28] ❌ ERROR: Command failed after 3 attempts: timeout --signal=TERM --kill-after=15 600 helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --create-namespace --namespace monitoring --set grafana.adminPassword=admin --wait --timeout 9m
+[2026-09-01 08:53:54] ==================================================
+[2026-09-01 08:53:54] 🚀 STARTING KUBERNETES SANDBOX LAB (k3d)
+[2026-09-01 08:53:54] ==================================================
+[2026-09-01 08:53:54] 🔍 Checking required tools...
+[2026-09-01 08:53:56] 🔍 Checking Docker/WSL2 resource allocation...
+[2026-09-01 08:53:57] ✅ Cluster 'enterprise-lab' already exists — skipping creation.
+[2026-09-01 08:53:57] ℹ️  NOTE: port mappings (80/443 for Ingress) are only set at cluster CREATION time.
+[2026-09-01 08:53:57] ℹ️  If this cluster was created before Ingress support was added to this script,
+[2026-09-01 08:53:57] ℹ️  run ./lab-down.sh then rerun this script to pick up the new port mappings.
+[2026-09-01 08:53:58] ⏳ Waiting for all nodes to report Ready...
+[2026-09-01 08:54:00] ⏳ Waiting for core cluster components (CoreDNS, local-path-provisioner) to be ready...
+[2026-09-01 08:54:01] 📂 Ensuring namespaces exist...
+[2026-09-01 08:54:04] ⚠️  Postgres already exists and no POSTGRES_PASSWORD was exported — reusing the existing Secret's password to avoid breaking Odoo's DB auth.
+[2026-09-01 08:54:06] 🔐 Creating/updating Postgres credentials Secret (database + apps namespaces)...
+[2026-09-01 08:54:09] 📝 Generating application manifest...
+[2026-09-01 08:54:09] 📦 Applying Postgres tier first...
+[2026-09-01 08:54:12] ⏳ Waiting for Postgres to be ready before starting Odoo (dependency ordering)...
+[2026-09-01 08:54:12] ▶️  Postgres rollout...
+[2026-09-01 08:54:30] ✅ Postgres rollout completed in 15s
+[2026-09-01 08:54:30] 📦 Applying remaining application manifests (Odoo, quotas)...
+[2026-09-01 08:54:32] ⏳ Waiting for Odoo to become ready (the image is ~600MB, first pull can take several minutes on a normal connection)...
+[2026-09-01 08:54:32] ▶️  Odoo rollout...
+[2026-09-01 08:54:47] ✅ Odoo rollout completed in 15s
+[2026-09-01 08:54:47] 📊 Setting up Prometheus & Grafana via Helm...
+[2026-09-01 08:56:01] 📥 Downloading and installing kube-prometheus-stack (large chart + several container images — this is the slowest step, can take 5-15+ min on a modest connection)...
+[2026-09-01 08:56:01] ▶️  Prometheus/Grafana Helm install...
+[2026-09-01 08:56:19] ⏳ (15s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:56:35] ⏳ (30s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:56:52] ⏳ (45s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:57:08] ⏳ (60s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:57:26] ⏳ (75s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:57:42] ⏳ (90s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:57:58] ⏳ (105s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:58:15] ⏳ (120s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:58:31] ⏳ (135s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:58:48] ⏳ (150s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:59:04] ⏳ (165s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:59:20] ⏳ (180s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:59:37] ⏳ (195s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 08:59:53] ⏳ (210s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:00:12] ⏳ (225s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:00:27] ⏳ (240s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:00:44] ⏳ (255s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:01:00] ⏳ (270s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:01:17] ⏳ (285s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:01:33] ⏳ (300s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:01:51] ⏳ (315s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:02:07] ⏳ (330s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:02:24] ⏳ (345s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:02:40] ⏳ (360s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:02:57] ⏳ (375s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:03:13] ⏳ (390s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:03:29] ⏳ (405s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:03:46] ⏳ (420s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:04:02] ⏳ (435s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:04:22] ⏳ (450s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:04:39] ⏳ (465s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:04:55] ⏳ (480s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:05:11] ⏳ (495s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:05:29] ⏳ (510s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:05:45] ⏳ (525s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:06:03] ⏳ (540s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:06:20] ⏳ (555s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:06:27] ⚠️  Attempt 1/3 failed. Retrying in 20s...
+[2026-09-01 09:06:38] ⏳ (570s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:06:55] ⏳ (585s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:07:13] ⏳ (600s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:07:30] ⏳ (615s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:07:48] ⏳ (630s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:08:05] ⏳ (645s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:08:22] ⏳ (660s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:08:40] ⏳ (675s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:08:56] ⏳ (690s elapsed) Prometheus/Grafana Helm install — pods: not created yet
+[2026-09-01 09:17:07] ⚠️  Attempt 2/3 failed. Retrying in 20s...
+[2026-09-01 09:27:51] ❌ ERROR: Command failed after 3 attempts: timeout --signal=TERM --kill-after=15 600 helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --create-namespace --namespace monitoring --set grafana.adminPassword=admin --wait --timeout 9m
