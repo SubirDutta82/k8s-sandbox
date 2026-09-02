@@ -594,7 +594,7 @@ if [[ "$INSTALL_MONITORING" == "true" ]]; then
     --set prometheus.ingress.enabled=true \
     --set-string prometheus.ingress.ingressClassName=traefik \
     --set-string "prometheus.ingress.hosts[0]=${PROMETHEUS_HOST}" \
-    --wait --timeout 12m
+    --wait --timeout 30m
   ok "Monitoring stack installed."
 else
   warn "INSTALL_MONITORING=false; monitoring installation skipped."
