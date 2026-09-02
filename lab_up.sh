@@ -377,6 +377,10 @@ log "⏳ Waiting for Postgres to be ready before starting Odoo (dependency order
 run_with_heartbeat "Postgres rollout" "database" \
   kubectl -n database rollout status deployment/enterprise-postgres --timeout=180s
 
+log "🔧 Ensuring Odoo database exists in Postgres..."
+kubectl exec -n database deployment/enterprise-postgres -- \
+  psql -U odoo_user -d postgres -c "CREATE DATABASE odoo;" || true
+
 log "📦 Applying remaining application manifests (Odoo, quotas)..."
 kubectl apply -f "$APP_MANIFEST"
 
