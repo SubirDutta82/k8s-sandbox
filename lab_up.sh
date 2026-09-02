@@ -138,8 +138,10 @@ kubectl config use-context "k3d-${CLUSTER_NAME}" >/dev/null
 log "⏳ Waiting for all nodes to report Ready..."
 kubectl wait --for=condition=Ready nodes --all --timeout=120s
 
-log "⏳ Waiting for core cluster components (CoreDNS, local-path-provisioner) to be ready..."
-kubectl wait --for=condition=Ready pods -n kube-system --all --timeout=120s || true
+log "⏳ Checking core cluster components..."
+kubectl get pods -n kube-system
+# Do not block here — continue even if some pods are still starting
+
 
 log "📂 Ensuring namespaces exist..."
 kubectl create namespace database --dry-run=client -o yaml | kubectl apply -f -
