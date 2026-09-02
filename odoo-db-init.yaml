@@ -1,0 +1,77 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: odoo-db-init
+  namespace: apps
+
+spec:
+  backoffLimit: 3
+
+  template:
+    metadata:
+      labels:
+        app: odoo-db-init
+
+    spec:
+      restartPolicy: Never
+
+      containers:
+        - name: odoo-init
+          image: odoo:17.0
+          imagePullPolicy: IfNotPresent
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
+          env:
+            - name: HOST
+              value: enterprise-postgres.database.svc.cluster.local
+
+            - name: PORT
+              value: "5432"
+
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: odoo-db-credentials
+                  key: DB_USER
+
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: odoo-db-credentials
+                  key: DB_PASSWORD
+
+          command:
+            - /bin/bash
+            - -c
+
+          args:
+            - |
+              set -e
+
+              echo "========================================="
+              echo "Starting Odoo database initialization"
+              echo "Database host: $HOST"
+              echo "Database port: $PORT"
+              echo "Database user: $USER"
+              echo "========================================="
+
+              odoo \
+                --db_host="$HOST" \
+                --db_port="$PORT" \
+                --db_user="$USER" \
+                --db_password="$PASSWORD" \
+                --database=odoo \
+                --init=base \
+                --without-demo=all \
+                --stop-after-init
+
+              echo "========================================="
+              echo "Odoo database initialization completed"
+              echo "========================================="

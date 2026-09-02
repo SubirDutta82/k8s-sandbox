@@ -3448,3 +3448,66 @@
 [2026-09-02 15:15:34] Creating/updating Postgres credentials Secrets...
 [2026-09-02 15:15:36] Writing Kubernetes application manifest to odoo-multi-ns.yaml...
 [2026-09-02 15:15:36] Applying PostgreSQL tier...
+[2026-09-02 15:25:14] ==================================================
+[2026-09-02 15:25:14] STARTING KUBERNETES SANDBOX LAB (k3d)
+[2026-09-02 15:25:14] ==================================================
+[2026-09-02 15:25:14] Checking required tools...
+[2026-09-02 15:25:15] Checking Docker/WSL2 resource allocation...
+[2026-09-02 15:25:17] Docker network 'k3d-lab-net' already exists.
+[2026-09-02 15:25:18] Cluster 'enterprise-lab' already exists — skipping creation.
+[2026-09-02 15:25:19] Waiting for all nodes to report Ready...
+[2026-09-02 15:25:20] Checking core cluster components...
+[2026-09-02 15:25:22] Ensuring namespaces exist...
+[2026-09-02 15:25:26] Creating/updating Postgres credentials Secrets...
+[2026-09-02 15:25:28] Writing Kubernetes application manifest to odoo-multi-ns.yaml...
+[2026-09-02 15:25:28] Applying PostgreSQL tier...
+[2026-09-02 15:25:29] Waiting for PostgreSQL to become Ready...
+[2026-09-02 15:25:29] Starting: Postgres rollout...
+[2026-09-02 15:25:48] (15s elapsed) Postgres rollout — pods: enterprise-postgres-7bcb95fb59-bj4qz:0/1  
+[2026-09-02 15:26:05] (30s elapsed) Postgres rollout — pods: enterprise-postgres-7bcb95fb59-bj4qz:0/1  
+[2026-09-02 15:26:21] (45s elapsed) Postgres rollout — pods: enterprise-postgres-7bcb95fb59-bj4qz:0/1  
+[2026-09-02 15:26:39] (60s elapsed) Postgres rollout — pods: enterprise-postgres-7bcb95fb59-bj4qz:0/1  
+[2026-09-02 15:26:57] (75s elapsed) Postgres rollout — pods: enterprise-postgres-7bcb95fb59-bj4qz:0/1  
+[2026-09-02 15:27:14] (90s elapsed) Postgres rollout — pods: enterprise-postgres-7bcb95fb59-bj4qz:0/1  
+[2026-09-02 15:27:29] Postgres rollout completed in 105s
+[2026-09-02 15:27:29] Ensuring Odoo database exists in PostgreSQL...
+[2026-09-02 15:27:30] Creating Odoo database...
+[2026-09-02 15:27:32] Applying Odoo and application resources...
+[2026-09-02 15:27:34] Waiting for Odoo to become Ready...
+[2026-09-02 15:27:34] Starting: Odoo rollout...
+[2026-09-02 15:27:50] (15s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:28:09] (30s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:28:27] (45s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:28:48] (60s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:29:08] (75s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:29:26] (90s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:29:44] (105s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:30:04] (120s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:30:21] (135s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:30:38] (150s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:30:55] (165s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:31:11] (180s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:31:29] (195s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:31:45] (210s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:32:04] (225s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:32:21] (240s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:32:38] (255s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:32:57] (270s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:33:14] (285s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:33:30] (300s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:33:46] (315s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:34:01] (330s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:34:17] (345s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:34:34] (360s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:34:50] (375s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:35:06] (390s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:35:22] (405s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:35:38] (420s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:35:54] (435s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:36:09] (450s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:36:25] (465s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:36:42] (480s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:36:58] (495s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:37:14] (510s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:37:29] (525s elapsed) Odoo rollout — pods: odoo-app-565f69789-9lg7q:0/1  
+[2026-09-02 15:37:44] ERROR: Odoo rollout failed after 540s (exit code 1)
