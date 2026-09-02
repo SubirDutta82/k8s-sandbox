@@ -347,6 +347,12 @@ log "⏳ Waiting for Odoo to become ready (the image is ~600MB, first pull can t
 run_with_heartbeat "Odoo rollout" "apps" \
   kubectl -n apps rollout status deployment/odoo-app --timeout=600s
 
+log "🔧 Initializing Odoo database schema..."
+POD=$(kubectl get pod -n apps -l app=odoo -o jsonpath='{.items[0].metadata.name}')
+kubectl exec -n apps $POD -c odoo -- \
+  bash -c 'odoo -d odoo -i base --stop-after-init \
+    --db_host=$HOST --db_user=$USER --db_password=$PASSWORD' || true
+
 ensure_clean_helm_release() {
   local rel="$1" ns="$2"
   local status
