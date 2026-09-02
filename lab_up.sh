@@ -139,8 +139,7 @@ log "⏳ Waiting for all nodes to report Ready..."
 kubectl wait --for=condition=Ready nodes --all --timeout=120s
 
 log "⏳ Waiting for core cluster components (CoreDNS, local-path-provisioner) to be ready..."
-kubectl -n kube-system rollout status deployment/coredns --timeout=90s || true
-kubectl -n kube-system rollout status deployment/local-path-provisioner --timeout=90s || true
+kubectl wait --for=condition=Ready pods -n kube-system --all --timeout=120s || true
 
 log "📂 Ensuring namespaces exist..."
 kubectl create namespace database --dry-run=client -o yaml | kubectl apply -f -
