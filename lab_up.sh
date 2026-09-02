@@ -28,9 +28,6 @@ fail() {
   exit 1
 }
 
-# Retry a command a few times with a delay between attempts — useful for
-# steps that hit transient network blips (e.g. downloading Helm chart
-# tarballs from a CDN on a slow connection).
 retry_cmd() {
   local attempts="$1" delay="$2"
   shift 2
@@ -45,10 +42,6 @@ retry_cmd() {
   done
 }
 
-# Run a long-running command in the background while printing periodic
-# "still working" status lines to the log — gives visibility into slow
-# steps (image pulls, chart downloads) without needing a second terminal.
-# Usage: run_with_heartbeat "description" "namespace-to-snapshot-or-empty" cmd args...
 run_with_heartbeat() {
   local desc="$1" watch_ns="$2"
   shift 2
@@ -91,13 +84,6 @@ check_deps() {
   docker info >/dev/null 2>&1 || fail "Docker daemon isn't reachable. Is Docker/WSL2 integration running?"
 }
 
-# k3s's default single-node datastore (embedded SQLite via "kine") is known
-# to fall over under sustained concurrent write load — this stack (Postgres +
-# Odoo + the full kube-prometheus-stack) generates exactly that kind of load.
-# Under-resourced Docker/WSL2 allocations have caused the k3s server process
-# to hit "Transaction commit failed" and crash outright. This is a soft
-# warning only — it won't block the run, since the cluster usually recovers
-# on its own, but it explains the failure mode if you hit it.
 check_resources() {
   log "🔍 Checking Docker/WSL2 resource allocation..."
   local mem_bytes cpus
@@ -116,24 +102,15 @@ check_resources() {
   fi
 }
 
-# k3d's default cluster network uses Docker's standard 1500-byte MTU. Over
-# WSL2, the actual path from a container-inside-a-k3d-node out to the
-# internet goes through an extra bridge/NAT hop that a plain host-level
-# `docker pull` doesn't take — and that extra hop is where a real-path MTU
-# mismatch shows up as "connection reset by peer" mid-download on large
-# image layers (confirmed: host-level pulls of the same image succeed fine,
-# only in-cluster pulls reset). Using a dedicated network with a lower,
-# safer MTU (1400) avoids this.
 LAB_NETWORK="k3d-lab-net"
 ensure_lab_network() {
   if ! docker network inspect "$LAB_NETWORK" >/dev/null 2>&1; then
     log "🌐 Creating dedicated Docker network '${LAB_NETWORK}' with MTU 1400 (avoids in-cluster image-pull"
-    log "🌐 TCP resets over WSL2's extra bridge hop — see comment above for details)..."
+    log "🌐 TCP resets over WSL2's extra bridge hop)..."
     docker network create --driver bridge --opt com.docker.network.driver.mtu=1400 "$LAB_NETWORK"
   fi
 }
 
-# ---------- 0. Preflight ----------
 log "=================================================="
 log "🚀 STARTING KUBERNETES SANDBOX LAB (k3d)"
 log "=================================================="
@@ -141,12 +118,8 @@ check_deps
 check_resources
 ensure_lab_network
 
-# ---------- 1. Cluster (idempotent) ----------
 if k3d cluster list 2>/dev/null | awk '{print $1}' | grep -qx "$CLUSTER_NAME"; then
   log "✅ Cluster '$CLUSTER_NAME' already exists — skipping creation."
-  log "ℹ️  NOTE: port mappings (80/443 for Ingress) and the reduced-MTU network are only set at"
-  log "ℹ️  cluster CREATION time. If this cluster predates either fix, run ./lab-down.sh then"
-  log "ℹ️  rerun this script to pick them up."
 else
   log "🏗️  Spinning up k3d cluster '$CLUSTER_NAME' (1 server + 2 agents)..."
   run_with_heartbeat "Creating k3d cluster" "" \
@@ -162,11 +135,6 @@ fi
 
 kubectl config use-context "k3d-${CLUSTER_NAME}" >/dev/null
 
-# ---------- 1b. Wait for the cluster to be truly ready, not just "created" ----------
-# k3d reporting "created successfully" only means the control plane answered —
-# it does NOT guarantee node readiness or that in-cluster controllers like the
-# local-path-provisioner (needed to bind our PVC) have finished starting.
-# Racing ahead of this causes PVCs to sit unbound and deployments to time out.
 log "⏳ Waiting for all nodes to report Ready..."
 kubectl wait --for=condition=Ready nodes --all --timeout=120s
 
@@ -174,24 +142,10 @@ log "⏳ Waiting for core cluster components (CoreDNS, local-path-provisioner) t
 kubectl -n kube-system rollout status deployment/coredns --timeout=90s || true
 kubectl -n kube-system rollout status deployment/local-path-provisioner --timeout=90s || true
 
-# ---------- 2. Namespaces ----------
 log "📂 Ensuring namespaces exist..."
 kubectl create namespace database --dry-run=client -o yaml | kubectl apply -f -
 kubectl create namespace apps     --dry-run=client -o yaml | kubectl apply -f -
 
-# ---------- 3. Secret (never store plaintext creds in a committed manifest) ----------
-# NOTE: Secrets are namespace-scoped. Postgres reads it via envFrom in the
-# 'database' namespace; Odoo reads it via secretKeyRef in the 'apps' namespace.
-# It must exist in BOTH namespaces or Odoo's pod will fail with
-# "secret postgres-credentials not found".
-#
-# SAFETY CHECK: Postgres only applies POSTGRES_PASSWORD on its first-ever
-# initdb. If Postgres is already running (data already initialized) and this
-# script generates a NEW random password, the Secret and the running database
-# fall out of sync and Odoo starts failing to authenticate. So: if Postgres
-# already exists and the caller did NOT explicitly export a password, reuse
-# whatever password is already sitting in the existing Secret instead of
-# the freshly-generated random one.
 if [ "$PASSWORD_WAS_EXPLICIT" = false ] && kubectl get deployment enterprise-postgres -n database >/dev/null 2>&1; then
   log "⚠️  Postgres already exists and no POSTGRES_PASSWORD was exported — reusing the existing Secret's password to avoid breaking Odoo's DB auth."
   EXISTING_PASSWORD="$(kubectl get secret postgres-credentials -n database -o jsonpath='{.data.POSTGRES_PASSWORD}' 2>/dev/null | base64 -d || true)"
@@ -209,7 +163,6 @@ for ns in database apps; do
     --dry-run=client -o yaml | kubectl apply -f -
 done
 
-# ---------- 4. App manifest (references the Secret, adds probes/limits) ----------
 cat <<'EOF' > "$APP_MANIFEST"
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -318,8 +271,12 @@ spec:
             secretKeyRef:
               name: postgres-credentials
               key: POSTGRES_PASSWORD
-        - name: DB_NAME
-          value: odoo
+        # NOTE: the official odoo image's entrypoint only reads HOST, USER,
+        # PASSWORD, PORT from the environment — it does NOT read a "DB_NAME"
+        # variable, so setting one has no effect. To actually pre-select a
+        # database and skip the Database Manager screen, pass it as a CLI
+        # arg via `--database` (Odoo's real supported mechanism for this).
+        args: ["--database=odoo"]
         readinessProbe:
           httpGet:
             path: /web/login
@@ -386,21 +343,15 @@ kubectl apply -f "$APP_MANIFEST"
 
 log "⏳ Waiting for Odoo to become ready (the image is ~600MB, first pull can take several minutes on a normal connection)..."
 run_with_heartbeat "Odoo rollout" "apps" \
-  kubectl -n apps rollout status deployment/odoo-app --timeout=420s
+  kubectl -n apps rollout status deployment/odoo-app --timeout=600s
 
-# If a previous run left the Helm release in a bad state (any status other
-# than "deployed" — failed, pending-install, pending-upgrade, pending-rollback,
-# or simply not existing), a plain `helm upgrade --install` will hit
-# "another operation (install/upgrade/rollback) is in progress" and never
-# proceed. Rather than requiring manual cleanup every time, detect this and
-# clear the stale release history automatically before attempting install.
 ensure_clean_helm_release() {
   local rel="$1" ns="$2"
   local status
   status="$(helm status "$rel" -n "$ns" -o json 2>/dev/null | grep -o '"status":"[a-zA-Z-]*"' | head -1 | cut -d'"' -f4 || true)"
 
   if [ -z "$status" ]; then
-    return 0  # no existing release — nothing to clean
+    return 0
   fi
 
   if [ "$status" != "deployed" ]; then
@@ -410,7 +361,6 @@ ensure_clean_helm_release() {
   fi
 }
 
-# ---------- 5. Observability ----------
 log "📊 Setting up Prometheus & Grafana via Helm..."
 ensure_clean_helm_release "monitoring" "$MONITORING_NS"
 if ! helm repo list 2>/dev/null | grep -q "prometheus-community"; then
@@ -419,12 +369,6 @@ fi
 helm repo update
 
 log "📥 Downloading and installing kube-prometheus-stack (large chart + several container images — this is the slowest step, can take 5-15+ min on a modest connection)..."
-# NOTE: helm's own --timeout is NOT a hard guarantee. Its --wait mechanism uses
-# a Kubernetes watch connection that can silently stall on flaky/NAT'd networks
-# (common under WSL2), causing helm to hang well past its stated --timeout
-# without ever returning or erroring. We wrap it in the coreutils `timeout`
-# command for a real, unconditional wall-clock kill, so retry_cmd can actually
-# retry instead of blocking forever on one stuck attempt.
 run_with_heartbeat "Prometheus/Grafana Helm install" "$MONITORING_NS" \
   retry_cmd 3 20 timeout --signal=TERM --kill-after=15 600 \
   helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
@@ -433,20 +377,11 @@ run_with_heartbeat "Prometheus/Grafana Helm install" "$MONITORING_NS" \
   --set grafana.adminPassword="admin" \
   --wait --timeout 9m
 
-# Belt-and-braces: even if the helm wait itself was flaky, verify the release
-# actually landed in a healthy state before declaring success.
 helm_status="$(helm status monitoring -n "$MONITORING_NS" -o json 2>/dev/null | grep -o '"status":"[a-zA-Z-]*"' | head -1 || true)"
 if [ -n "$helm_status" ] && ! echo "$helm_status" | grep -q "deployed"; then
   log "⚠️  Helm release status is '${helm_status}', not 'deployed'. Check manually with: helm status monitoring -n ${MONITORING_NS}"
 fi
 
-# ---------- 6. Ingress (permanent, zero-terminal access via Traefik) ----------
-# k3s ships with Traefik as its default ingress controller. Combined with the
-# 80/443 port mappings on the k3d cluster, these Ingress resources give you
-# stable URLs that work with no `kubectl port-forward` running at all.
-# NOTE: this only covers HTTP(S) traffic. Postgres is a raw TCP protocol, not
-# HTTP, so it isn't (and can't be) covered by a standard Ingress — keep using
-# `kubectl port-forward` for direct Postgres access.
 log "🌐 Setting up permanent Ingress routes (Odoo, Grafana, Prometheus, Alertmanager)..."
 cat <<'EOF' > ingress.yaml
 apiVersion: networking.k8s.io/v1
@@ -510,7 +445,6 @@ EOF
 
 kubectl apply -f ingress.yaml
 
-# ---------- 7. Summary ----------
 log "=================================================="
 log "🎯 SUCCESS: LAB ARCHITECTURE INITIALIZED (k3d)"
 log "=================================================="
