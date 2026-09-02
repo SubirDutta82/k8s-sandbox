@@ -201,7 +201,9 @@ spec:
             claimName: odoo-data
 YAML
 
-  if ! kubectl -n "$APP_NAMESPACE" wait --for=condition=complete job/odoo-db-init --timeout=30m; then
+log "Waiting for Odoo initialization Job to complete. Fresh image pulls may take several minutes..."
+
+if ! kubectl -n "$APP_NAMESPACE" wait --for=condition=complete job/odoo-db-init --timeout=30m; then
     warn "Odoo initialization Job did not complete successfully."
     kubectl -n "$APP_NAMESPACE" get job odoo-db-init -o wide || true
     kubectl -n "$APP_NAMESPACE" get pods -l job-name=odoo-db-init -o wide || true
@@ -209,7 +211,7 @@ YAML
     kubectl -n "$APP_NAMESPACE" describe pod -l job-name=odoo-db-init || true
     kubectl -n "$APP_NAMESPACE" logs -l job-name=odoo-db-init --tail=250 || true
     die "Odoo database initialization failed."
-  fi
+fi
 
   kubectl -n "$APP_NAMESPACE" logs job/odoo-db-init --tail=80 || true
   odoo_is_initialized || die "Odoo Job completed, but database verification failed."
