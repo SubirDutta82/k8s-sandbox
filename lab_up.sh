@@ -191,7 +191,7 @@ spec:
     metadata:
       labels:
         app: postgres
-    
+    spec:
       containers:
       - name: postgres
         image: postgres:15-alpine
