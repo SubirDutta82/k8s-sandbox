@@ -458,7 +458,6 @@ spec:
     app: postgres
 EOF
 }
-}
 
 wait_for_postgres() {
   log "Waiting for PostgreSQL to become Ready..."
