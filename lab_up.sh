@@ -1,14 +1,18 @@
 #!/bin/bash
 #
 # lab-up.sh — Spin up a production-shaped Kubernetes sandbox for demos/recording.
-# Uses k3d (Docker-based k3s clusters). Idempotent: safe to re-run.
+# Uses k3d (Docker-based k3s clusters).
+# Idempotent: safe to re-run.
+#
 
 set -euo pipefail
 
 # ---------- Config ----------
 CLUSTER_NAME="enterprise-lab"
 APP_MANIFEST="odoo-multi-ns.yaml"
+INGRESS_MANIFEST="ingress.yaml"
 MONITORING_NS="monitoring"
+LAB_NETWORK="k3d-lab-net"
 LOG_FILE="lab-up.log"
 
 # Track whether the caller explicitly exported a password before we default it.
@@ -24,158 +28,176 @@ log() {
 }
 
 fail() {
-  log "❌ ERROR: $*"
+  log "ERROR: $*"
   exit 1
 }
 
 retry_cmd() {
-  local attempts="$1" delay="$2"
+  local attempts="$1"
+  local delay="$2"
   shift 2
+
   local n=1
   until "$@"; do
     if [ "$n" -ge "$attempts" ]; then
       fail "Command failed after $attempts attempts: $*"
     fi
-    log "⚠️  Attempt $n/$attempts failed. Retrying in ${delay}s..."
+
+    log "Attempt $n/$attempts failed. Retrying in ${delay}s..."
     n=$((n + 1))
     sleep "$delay"
   done
 }
 
 run_with_heartbeat() {
-  local desc="$1" watch_ns="$2"
+  local desc="$1"
+  local watch_ns="$2"
   shift 2
-  log "▶️  ${desc}..."
-  ("$@") &
+
+  log "Starting: ${desc}..."
+  "$@" &
   local cmd_pid=$!
   local elapsed=0
   local interval=15
+
   while kill -0 "$cmd_pid" 2>/dev/null; do
     sleep "$interval"
     elapsed=$((elapsed + interval))
-    kill -0 "$cmd_pid" 2>/dev/null || break
+
+    if ! kill -0 "$cmd_pid" 2>/dev/null; then
+      break
+    fi
+
     if [ -n "$watch_ns" ]; then
       local snapshot
-      snapshot=$(kubectl get pods -n "$watch_ns" --no-headers 2>/dev/null | awk '{printf "%s:%s  ", $1, $2}')
-      log "⏳ (${elapsed}s elapsed) ${desc} — pods: ${snapshot:-not created yet}"
+      snapshot="$(kubectl get pods -n "$watch_ns" --no-headers 2>/dev/null \
+        | awk '{printf "%s:%s  ", $1, $2}')"
+      log "(${elapsed}s elapsed) ${desc} — pods: ${snapshot:-not created yet}"
     else
-      log "⏳ (${elapsed}s elapsed) ${desc}..."
+      log "(${elapsed}s elapsed) ${desc}..."
     fi
   done
-  wait "$cmd_pid"
-  local status=$?
+
+  local status=0
+  wait "$cmd_pid" || status=$?
+
   if [ "$status" -ne 0 ]; then
     fail "${desc} failed after ${elapsed}s (exit code ${status})"
   fi
-  log "✅ ${desc} completed in ${elapsed}s"
+
+  log "${desc} completed in ${elapsed}s"
 }
 
-trap 'log "❌ Script failed at line $LINENO. See $LOG_FILE for details."' ERR
+trap 'log "Script failed at line $LINENO. See $LOG_FILE for details."' ERR
 
+# ---------- Checks ----------
 check_deps() {
-  log "🔍 Checking required tools..."
+  log "Checking required tools..."
+
   local missing=()
   for bin in k3d kubectl helm docker openssl; do
     command -v "$bin" >/dev/null 2>&1 || missing+=("$bin")
   done
+
   if [ "${#missing[@]}" -gt 0 ]; then
     fail "Missing required tools: ${missing[*]}. Install them before running this script."
   fi
-  docker info >/dev/null 2>&1 || fail "Docker daemon isn't reachable. Is Docker/WSL2 integration running?"
+
+  docker info >/dev/null 2>&1 || \
+    fail "Docker daemon isn't reachable. Is Docker/WSL2 integration running?"
 }
 
 check_resources() {
-  log "🔍 Checking Docker/WSL2 resource allocation..."
+  log "Checking Docker/WSL2 resource allocation..."
+
   local mem_bytes cpus
   mem_bytes="$(docker info --format '{{.MemTotal}}' 2>/dev/null || echo 0)"
   cpus="$(docker info --format '{{.NCPU}}' 2>/dev/null || echo 0)"
+
   local mem_gb=$((mem_bytes / 1024 / 1024 / 1024))
 
   if [ "$mem_gb" -gt 0 ] && [ "$mem_gb" -lt 6 ]; then
-    log "⚠️  Docker/WSL2 has only ~${mem_gb}GB memory allocated. Running Postgres + Odoo + the full"
-    log "⚠️  monitoring stack concurrently can push k3s's embedded SQLite datastore into failure under"
-    log "⚠️  this level of I/O pressure (symptom: 'Transaction commit failed', server restarts)."
-    log "⚠️  Consider raising the WSL2 memory limit in .wslconfig to 6-8GB+ if this recurs."
+    log "WARNING: Docker/WSL2 has only ~${mem_gb}GB memory allocated."
+    log "WARNING: Postgres + Odoo + monitoring may put heavy pressure on the lab."
+    log "WARNING: Consider raising WSL2 memory to 6-8GB+ if you see restarts or commit errors."
   fi
+
   if [ "$cpus" -gt 0 ] && [ "$cpus" -lt 4 ]; then
-    log "⚠️  Docker/WSL2 has only ${cpus} CPU(s) allocated. Consider raising to 4+ for this workload."
+    log "WARNING: Docker/WSL2 has only ${cpus} CPU(s). Consider 4+ CPUs for this workload."
   fi
 }
 
-LAB_NETWORK="k3d-lab-net"
 ensure_lab_network() {
   if ! docker network inspect "$LAB_NETWORK" >/dev/null 2>&1; then
-    log "🌐 Creating dedicated Docker network '${LAB_NETWORK}' with MTU 1400 (avoids in-cluster image-pull"
-    log "🌐 TCP resets over WSL2's extra bridge hop)..."
-    docker network create --driver bridge --opt com.docker.network.driver.mtu=1400 "$LAB_NETWORK"
+    log "Creating dedicated Docker network '${LAB_NETWORK}' with MTU 1400..."
+    docker network create \
+      --driver bridge \
+      --opt com.docker.network.driver.mtu=1400 \
+      "$LAB_NETWORK"
+  else
+    log "Docker network '${LAB_NETWORK}' already exists."
   fi
 }
 
-log "=================================================="
-log "🚀 STARTING KUBERNETES SANDBOX LAB (k3d)"
-log "=================================================="
-check_deps
-check_resources
-ensure_lab_network
+ensure_namespaces() {
+  log "Ensuring namespaces exist..."
 
-if k3d cluster list 2>/dev/null | awk '{print $1}' | grep -qx "$CLUSTER_NAME"; then
-  log "✅ Cluster '$CLUSTER_NAME' already exists — skipping creation."
-else
-  log "🏗️  Spinning up k3d cluster '$CLUSTER_NAME' (1 server + 2 agents)..."
-  run_with_heartbeat "Creating k3d cluster" "" \
-    k3d cluster create "$CLUSTER_NAME" \
-    --servers 1 \
-    --agents 2 \
-    -p "80:80@loadbalancer" \
-    -p "443:443@loadbalancer" \
-    --network "$LAB_NETWORK" \
-    --wait \
-    --timeout 90s
-fi
+  kubectl create namespace database --dry-run=client -o yaml | kubectl apply -f -
+  kubectl create namespace apps --dry-run=client -o yaml | kubectl apply -f -
+  kubectl create namespace "$MONITORING_NS" --dry-run=client -o yaml | kubectl apply -f -
+}
 
-kubectl config use-context "k3d-${CLUSTER_NAME}" >/dev/null
+ensure_postgres_password() {
+  if [ "$PASSWORD_WAS_EXPLICIT" = false ] &&
+     kubectl get deployment enterprise-postgres -n database >/dev/null 2>&1; then
 
-log "⏳ Waiting for all nodes to report Ready..."
-kubectl wait --for=condition=Ready nodes --all --timeout=120s
+    log "Postgres already exists and no POSTGRES_PASSWORD was exported."
+    log "Reusing the existing Secret password to avoid breaking Odoo DB authentication."
 
-log "⏳ Checking core cluster components..."
-kubectl get pods -n kube-system
-# Do not block here — continue even if some pods are still starting
+    local existing_password
+    existing_password="$(
+      kubectl get secret postgres-credentials -n database \
+        -o jsonpath='{.data.POSTGRES_PASSWORD}' 2>/dev/null \
+        | base64 -d || true
+    )"
 
+    [ -n "$existing_password" ] || \
+      fail "Postgres exists but its Secret password could not be read. Export POSTGRES_PASSWORD and rerun."
 
-log "📂 Ensuring namespaces exist..."
-kubectl create namespace database --dry-run=client -o yaml | kubectl apply -f -
-kubectl create namespace apps     --dry-run=client -o yaml | kubectl apply -f -
+    POSTGRES_PASSWORD="$existing_password"
+  fi
+}
 
-if [ "$PASSWORD_WAS_EXPLICIT" = false ] && kubectl get deployment enterprise-postgres -n database >/dev/null 2>&1; then
-  log "⚠️  Postgres already exists and no POSTGRES_PASSWORD was exported — reusing the existing Secret's password to avoid breaking Odoo's DB auth."
-  EXISTING_PASSWORD="$(kubectl get secret postgres-credentials -n database -o jsonpath='{.data.POSTGRES_PASSWORD}' 2>/dev/null | base64 -d || true)"
-  [ -n "$EXISTING_PASSWORD" ] || fail "Postgres deployment exists but its Secret's password couldn't be read. Export POSTGRES_PASSWORD manually and rerun."
-  POSTGRES_PASSWORD="$EXISTING_PASSWORD"
-fi
+create_postgres_secrets() {
+  log "Creating/updating Postgres credentials Secrets..."
 
-log "🔐 Creating/updating Postgres credentials Secret (database + apps namespaces)..."
-for ns in database apps; do
-  kubectl create secret generic postgres-credentials \
-    --namespace "$ns" \
-    --from-literal=POSTGRES_DB=postgres \
-    --from-literal=POSTGRES_USER=odoo_user \
-    --from-literal=POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" \
-    --dry-run=client -o yaml | kubectl apply -f -
-done
+  for ns in database apps; do
+    kubectl create secret generic postgres-credentials \
+      --namespace "$ns" \
+      --from-literal=POSTGRES_DB=postgres \
+      --from-literal=POSTGRES_USER=odoo_user \
+      --from-literal=POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
+      --dry-run=client -o yaml | kubectl apply -f -
+  done
+}
 
-cat <<'EOF' > "$APP_MANIFEST"
+write_application_manifest() {
+  log "Writing Kubernetes application manifest to ${APP_MANIFEST}..."
+
+  cat <<'EOF' > "$APP_MANIFEST"
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-db-pvc
   namespace: database
 spec:
-  accessModes: ["ReadWriteOnce"]
+  accessModes:
+    - ReadWriteOnce
   storageClassName: local-path
   resources:
     requests:
       storage: 2Gi
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -193,38 +215,52 @@ spec:
         app: postgres
     spec:
       containers:
-      - name: postgres
-        image: postgres:15-alpine
-        envFrom:
-        - secretRef:
-            name: postgres-credentials
-        ports:
-        - containerPort: 5432
-        volumeMounts:
-        - name: pgdata
-          mountPath: /var/lib/postgresql/data
-          subPath: pgdata
-        readinessProbe:
-          exec:
-            command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        livenessProbe:
-          exec:
-            command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
-          initialDelaySeconds: 60
-          periodSeconds: 20
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "1Gi"
-          limits:
-            cpu: "2"
-            memory: "4Gi"
+        - name: postgres
+          image: postgres:15-alpine
+          envFrom:
+            - secretRef:
+                name: postgres-credentials
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+              subPath: pgdata
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - odoo_user
+                - -d
+                - postgres
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - odoo_user
+                - -d
+                - postgres
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 5
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
       volumes:
-      - name: pgdata
-        persistentVolumeClaim:
-          claimName: postgres-db-pvc
+        - name: pgdata
+          persistentVolumeClaim:
+            claimName: postgres-db-pvc
 
 ---
 apiVersion: v1
@@ -234,9 +270,11 @@ metadata:
   namespace: database
 spec:
   ports:
-  - port: 5432
+    - port: 5432
+      targetPort: 5432
   selector:
     app: postgres
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -253,73 +291,50 @@ spec:
       labels:
         app: odoo
     spec:
-      initContainers:   # <-- ADD THIS BLOCK
-      - name: init-odoo-schema
-        image: odoo:17.0
-        env:
-        - name: HOST
-          value: enterprise-postgres.database.svc.cluster.local
-        - name: USER
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: POSTGRES_USER
-        - name: PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: POSTGRES_PASSWORD
-        command: ["bash", "-c"]
-        args:
-          - odoo -d odoo -i base --stop-after-init \
-              --db_host=$HOST --db_user=$USER --db_password=$PASSWORD  
       containers:
-      - name: odoo
-        image: odoo:17.0
-        ports:
-        - containerPort: 8069
-        env:
-        - name: HOST
-          value: enterprise-postgres.database.svc.cluster.local
-        - name: USER
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: POSTGRES_USER
-        - name: PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: POSTGRES_PASSWORD
-        # NOTE: the official odoo image's entrypoint only reads HOST, USER,
-        # PASSWORD, PORT from the environment — it does NOT read a "DB_NAME"
-        # variable, so setting one has no effect. To actually pre-select a
-        # database and skip the Database Manager screen, pass it as a CLI
-        # arg via `--database` (Odoo's real supported mechanism for this).
-        args: ["--database=odoo"]
-        readinessProbe:
-          httpGet:
-            path: /web/login
-            port: 8069
-          initialDelaySeconds: 120
-          periodSeconds: 30
-          timeoutSeconds: 50
-          failureThreshold: 10
-        livenessProbe:
-          httpGet:
-            path: /web/login
-            port: 8069
-          initialDelaySeconds: 60
-          periodSeconds: 30
-          timeoutSeconds: 10
-          failureThreshold: 5
-        resources:
-          requests:
-            cpu: "300m"
-            memory: "512Mi"
-          limits:
-            cpu: "1"
-            memory: "1536Mi"
+        - name: odoo
+          image: odoo:17.0
+          ports:
+            - containerPort: 8069
+          env:
+            - name: HOST
+              value: enterprise-postgres.database.svc.cluster.local
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_USER
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_PASSWORD
+          args:
+            - "--database=odoo"
+          readinessProbe:
+            httpGet:
+              path: /web/login
+              port: 8069
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 15
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /web/login
+              port: 8069
+            initialDelaySeconds: 180
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 5
+          resources:
+            requests:
+              cpu: "300m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1536Mi"
+
 ---
 apiVersion: v1
 kind: Service
@@ -328,10 +343,11 @@ metadata:
   namespace: apps
 spec:
   ports:
-  - port: 8069
-    targetPort: 8069
+    - port: 8069
+      targetPort: 8069
   selector:
     app: odoo
+
 ---
 apiVersion: v1
 kind: ResourceQuota
@@ -345,77 +361,112 @@ spec:
     limits.cpu: "2"
     limits.memory: 4Gi
 EOF
+}
 
-log "📦 Applying Postgres tier first..."
-kubectl apply -f "$APP_MANIFEST" --selector=app=postgres 2>/dev/null || \
-  kubectl apply -f <(awk '/^---$/{c++} c<=2' "$APP_MANIFEST")
+apply_postgres() {
+  log "Applying PostgreSQL tier..."
 
-log "⏳ Waiting for Postgres to be ready before starting Odoo (dependency ordering)..."
-run_with_heartbeat "Postgres rollout" "database" \
-  kubectl -n database rollout status deployment/enterprise-postgres --timeout=180s
+  kubectl apply -f "$APP_MANIFEST" \
+    --namespace database \
+    --selector='app=postgres'
+}
 
+wait_for_postgres() {
+  log "Waiting for PostgreSQL to become Ready..."
 
-+log "🔧 Ensuring Odoo user and database exist in Postgres..."
-+kubectl exec -n database deployment/enterprise-postgres -- \
-+  psql -U odoo_user -d postgres -c "DO $$ BEGIN
-+    IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'odoo') THEN
-+      CREATE DATABASE odoo OWNER odoo_user;
-+    END IF;
-+  END $$;" || true
+  run_with_heartbeat "Postgres rollout" "database" \
+    kubectl -n database rollout status \
+      deployment/enterprise-postgres \
+      --timeout=180s
+}
 
+ensure_odoo_database() {
+  log "Ensuring Odoo database exists in PostgreSQL..."
 
-log "📦 Applying remaining application manifests (Odoo, quotas)..."
-kubectl apply -f "$APP_MANIFEST"
+  local database_exists
+  database_exists="$(
+    kubectl exec -n database deployment/enterprise-postgres -- \
+      psql -U odoo_user -d postgres -tAc \
+      "SELECT 1 FROM pg_database WHERE datname='odoo';"
+  )"
 
-log "⏳ Waiting for Odoo to become ready (the image is ~600MB, first pull can take several minutes on a normal connection)..."
-run_with_heartbeat "Odoo rollout" "apps" \
-  kubectl -n apps rollout status deployment/odoo-app --timeout=600s
+  if [ "$database_exists" = "1" ]; then
+    log "Odoo database already exists."
+  else
+    log "Creating Odoo database..."
 
-log "🔧 Initializing Odoo database schema..."
-POD=$(kubectl get pod -n apps -l app=odoo -o jsonpath='{.items[0].metadata.name}')
-kubectl exec -n apps $POD -c odoo -- \
-  bash -c 'odoo -d odoo -i base --stop-after-init \
-    --db_host=$HOST --db_user=$USER --db_password=$PASSWORD' || true
-
-ensure_clean_helm_release() {
-  local rel="$1" ns="$2"
-  local status
-  status="$(helm status "$rel" -n "$ns" -o json 2>/dev/null | grep -o '"status":"[a-zA-Z-]*"' | head -1 | cut -d'"' -f4 || true)"
-
-  if [ -z "$status" ]; then
-    return 0
-  fi
-
-  if [ "$status" != "deployed" ]; then
-    log "⚠️  Existing Helm release '${rel}' in namespace '${ns}' has status '${status}', not 'deployed'."
-    log "⚠️  Clearing its release history so this run starts fresh (no effect on already-running pods)."
-    kubectl get secrets -n "$ns" -l "owner=helm,name=${rel}" -o name 2>/dev/null | xargs -r kubectl delete -n "$ns" || true
+    kubectl exec -n database deployment/enterprise-postgres -- \
+      psql -U odoo_user -d postgres \
+      -c "CREATE DATABASE odoo OWNER odoo_user;"
   fi
 }
 
-log "📊 Setting up Prometheus & Grafana via Helm..."
-ensure_clean_helm_release "monitoring" "$MONITORING_NS"
-if ! helm repo list 2>/dev/null | grep -q "prometheus-community"; then
-  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-fi
-helm repo update
+apply_odoo() {
+  log "Applying Odoo and application resources..."
 
-log "📥 Downloading and installing kube-prometheus-stack (large chart + several container images — this is the slowest step, can take 5-15+ min on a modest connection)..."
-run_with_heartbeat "Prometheus/Grafana Helm install" "$MONITORING_NS" \
-  retry_cmd 3 20 timeout --signal=TERM --kill-after=15 600 \
-  helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
-  --create-namespace \
-  --namespace "$MONITORING_NS" \
-  --set grafana.adminPassword="admin" \
-  --wait --timeout 9m
+  kubectl apply -f "$APP_MANIFEST"
+}
 
-helm_status="$(helm status monitoring -n "$MONITORING_NS" -o json 2>/dev/null | grep -o '"status":"[a-zA-Z-]*"' | head -1 || true)"
-if [ -n "$helm_status" ] && ! echo "$helm_status" | grep -q "deployed"; then
-  log "⚠️  Helm release status is '${helm_status}', not 'deployed'. Check manually with: helm status monitoring -n ${MONITORING_NS}"
-fi
+wait_for_odoo() {
+  log "Waiting for Odoo to become Ready..."
 
-log "🌐 Setting up permanent Ingress routes (Odoo, Grafana, Prometheus, Alertmanager)..."
-cat <<'EOF' > ingress.yaml
+  run_with_heartbeat "Odoo rollout" "apps" \
+    kubectl -n apps rollout status \
+      deployment/odoo-app \
+      --timeout=600s
+}
+
+initialize_odoo() {
+  log "Checking Odoo database initialization..."
+
+  local pod
+  pod="$(kubectl get pod -n apps -l app=odoo \
+    -o jsonpath='{.items[0].metadata.name}')"
+
+  [ -n "$pod" ] || fail "Could not find an Odoo pod."
+
+  log "Running Odoo base module initialization..."
+
+  kubectl exec -n apps "$pod" -c odoo -- \
+    bash -c 'odoo -d odoo -i base --stop-after-init \
+      --db_host="$HOST" \
+      --db_user="$USER" \
+      --db_password="$PASSWORD"
+  ' || {
+    log "WARNING: Explicit Odoo schema initialization returned a non-zero exit code."
+    log "Odoo may already be initialized; continuing with the running application."
+  }
+}
+
+ensure_monitoring_helm_repo() {
+  if ! helm repo list 2>/dev/null | grep -q "prometheus-community"; then
+    log "Adding prometheus-community Helm repository..."
+    helm repo add prometheus-community \
+      https://prometheus-community.github.io/helm-charts
+  fi
+
+  helm repo update
+}
+
+install_monitoring() {
+  log "Installing/upgrading kube-prometheus-stack..."
+
+  run_with_heartbeat "Prometheus/Grafana Helm install" "$MONITORING_NS" \
+    retry_cmd 3 20 \
+      timeout --signal=TERM --kill-after=30 720 \
+      helm upgrade --install monitoring \
+        prometheus-community/kube-prometheus-stack \
+        --create-namespace \
+        --namespace "$MONITORING_NS" \
+        --set grafana.adminPassword=admin \
+        --wait \
+        --timeout 10m
+}
+
+write_ingress_manifest() {
+  log "Writing Ingress manifest to ${INGRESS_MANIFEST}..."
+
+  cat <<'EOF' > "$INGRESS_MANIFEST"
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -424,16 +475,17 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: odoo.lab.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: odoo-service
-            port:
-              number: 8069
+    - host: odoo.lab.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: odoo-service
+                port:
+                  number: 8069
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -443,57 +495,117 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: grafana.lab.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: monitoring-grafana
-            port:
-              number: 80
-  - host: prometheus.lab.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: monitoring-kube-prometheus-prometheus
-            port:
-              number: 9090
-  - host: alertmanager.lab.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: monitoring-kube-prometheus-alertmanager
-            port:
-              number: 9093
+    - host: grafana.lab.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-grafana
+                port:
+                  number: 80
+
+    - host: prometheus.lab.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-kube-prometheus-prometheus
+                port:
+                  number: 9090
+
+    - host: alertmanager.lab.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-kube-prometheus-alertmanager
+                port:
+                  number: 9093
 EOF
+}
 
-kubectl apply -f ingress.yaml
+apply_ingress() {
+  log "Applying Ingress routes..."
+
+  kubectl apply -f "$INGRESS_MANIFEST"
+}
+
+# ---------- Main ----------
+log "=================================================="
+log "STARTING KUBERNETES SANDBOX LAB (k3d)"
+log "=================================================="
+
+check_deps
+check_resources
+ensure_lab_network
+
+if k3d cluster list 2>/dev/null | awk 'NR > 1 {print $1}' | grep -qx "$CLUSTER_NAME"; then
+  log "Cluster '$CLUSTER_NAME' already exists — skipping creation."
+else
+  log "Creating k3d cluster '$CLUSTER_NAME' (1 server + 2 agents)..."
+
+  run_with_heartbeat "Creating k3d cluster" "" \
+    k3d cluster create "$CLUSTER_NAME" \
+      --servers 1 \
+      --agents 2 \
+      -p "80:80@loadbalancer" \
+      -p "443:443@loadbalancer" \
+      --network "$LAB_NETWORK" \
+      --wait \
+      --timeout 90s
+fi
+
+kubectl config use-context "k3d-${CLUSTER_NAME}" >/dev/null
+
+log "Waiting for all nodes to report Ready..."
+kubectl wait --for=condition=Ready nodes --all --timeout=120s
+
+log "Checking core cluster components..."
+kubectl get nodes
+kubectl get pods -n kube-system
+
+ensure_namespaces
+ensure_postgres_password
+create_postgres_secrets
+write_application_manifest
+
+apply_postgres
+wait_for_postgres
+ensure_odoo_database
+
+apply_odoo
+wait_for_odoo
+initialize_odoo
+
+ensure_monitoring_helm_repo
+install_monitoring
+
+write_ingress_manifest
+apply_ingress
 
 log "=================================================="
-log "🎯 SUCCESS: LAB ARCHITECTURE INITIALIZED (k3d)"
+log "SUCCESS: LAB ARCHITECTURE INITIALIZED (k3d)"
 log "=================================================="
-log "Postgres password (auto-generated, stored only in the Secret): ${POSTGRES_PASSWORD}"
+log "Postgres password: ${POSTGRES_PASSWORD}"
 log ""
-log "⚠️  ONE-TIME SETUP REQUIRED: add these lines to your Windows hosts file"
-log "    (C:\\Windows\\System32\\drivers\\etc\\hosts, edited as Administrator):"
-log "      127.0.0.1 odoo.lab.local"
-log "      127.0.0.1 grafana.lab.local"
-log "      127.0.0.1 prometheus.lab.local"
-log "      127.0.0.1 alertmanager.lab.local"
+log "ONE-TIME SETUP: Add these lines to your Windows hosts file"
+log "(C:\\Windows\\System32\\drivers\\etc\\hosts, edited as Administrator):"
+log "  127.0.0.1 odoo.lab.local"
+log "  127.0.0.1 grafana.lab.local"
+log "  127.0.0.1 prometheus.lab.local"
+log "  127.0.0.1 alertmanager.lab.local"
 log ""
-log "👉 Odoo         : http://odoo.lab.local"
-log "👉 Grafana      : http://grafana.lab.local  (login: admin / admin)"
-log "👉 Prometheus   : http://prometheus.lab.local"
-log "👉 Alertmanager : http://alertmanager.lab.local"
+log "Odoo         : http://odoo.lab.local"
+log "Grafana      : http://grafana.lab.local  (login: admin / admin)"
+log "Prometheus   : http://prometheus.lab.local"
+log "Alertmanager : http://alertmanager.lab.local"
 log ""
-log "👉 Postgres (still needs port-forward — raw TCP, not HTTP):"
-log "   kubectl port-forward svc/enterprise-postgres -n database 5432:5432"
+log "Postgres (raw TCP):"
+log "  kubectl port-forward svc/enterprise-postgres -n database 5432:5432"
 log "=================================================="
