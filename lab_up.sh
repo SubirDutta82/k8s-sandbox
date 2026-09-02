@@ -206,22 +206,24 @@ spec:
         readinessProbe:
           exec:
             command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          timeoutSeconds: 3
+          initialDelaySeconds: 300
+          periodSeconds: 30
+          timeoutSeconds: 50
+          failureThreshold: 10
         livenessProbe:
           exec:
             command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
-          initialDelaySeconds: 15
-          periodSeconds: 10
-          timeoutSeconds: 3
+          initialDelaySeconds: 180
+          periodSeconds: 30
+          timeoutSeconds: 15
+          failureThreshold: 5
         resources:
           requests:
             cpu: "100m"
-            memory: "256Mi"
+            memory: "1Gi"
           limits:
-            cpu: "300m"
-            memory: "512Mi"
+            cpu: "2"
+            memory: "4Gi"
       volumes:
       - name: pgdata
         persistentVolumeClaim:
