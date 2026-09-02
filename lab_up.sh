@@ -324,10 +324,10 @@ spec:
           httpGet:
             path: /web/login
             port: 8069
-          initialDelaySeconds: 40
-          periodSeconds: 15
-          timeoutSeconds: 10
-          failureThreshold: 5
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 50
+          failureThreshold: 10
         livenessProbe:
           httpGet:
             path: /web/login
