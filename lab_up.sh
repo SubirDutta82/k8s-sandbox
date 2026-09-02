@@ -191,6 +191,17 @@ spec:
       labels:
         app: postgres
     spec:
+      initContainers:
+      - name: init-odoo-user
+        image: postgres:15-alpine
+        envFrom:
+        - secretRef:
+            name: postgres-credentials
+        command: ["sh", "-c"]
+        args:
+          - |
+            until pg_isready -h localhost -U postgres; do sleep 2; done
+            psql -U postgres -d postgres -c "CREATE ROLE odoo_user LOGIN PASSWORD '${POSTGRES_PASSWORD}'" || true
       containers:
       - name: postgres
         image: postgres:15-alpine
@@ -206,17 +217,13 @@ spec:
         readinessProbe:
           exec:
             command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
-          initialDelaySeconds: 300
-          periodSeconds: 30
-          timeoutSeconds: 50
-          failureThreshold: 10
+          initialDelaySeconds: 30
+          periodSeconds: 10
         livenessProbe:
           exec:
             command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
-          initialDelaySeconds: 180
-          periodSeconds: 30
-          timeoutSeconds: 15
-          failureThreshold: 5
+          initialDelaySeconds: 60
+          periodSeconds: 20
         resources:
           requests:
             cpu: "100m"
@@ -228,6 +235,7 @@ spec:
       - name: pgdata
         persistentVolumeClaim:
           claimName: postgres-db-pvc
+
 ---
 apiVersion: v1
 kind: Service
