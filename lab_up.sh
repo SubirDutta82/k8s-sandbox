@@ -191,18 +191,7 @@ spec:
     metadata:
       labels:
         app: postgres
-    spec:
-      initContainers:
-      - name: init-odoo-user
-        image: postgres:15-alpine
-        envFrom:
-        - secretRef:
-            name: postgres-credentials
-        command: ["sh", "-c"]
-        args:
-          - |
-            until pg_isready -h localhost -U postgres; do sleep 2; done
-            psql -U postgres -d postgres -c "CREATE ROLE odoo_user LOGIN PASSWORD '${POSTGRES_PASSWORD}'" || true
+    
       containers:
       - name: postgres
         image: postgres:15-alpine
