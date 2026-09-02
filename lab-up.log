@@ -2792,3 +2792,51 @@
 [2026-09-02 04:29:08] ⏳ (345s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:0/1  
 [2026-09-02 04:29:28] ⏳ (360s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:0/1  
 [2026-09-02 04:29:45] ⏳ (375s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:0/1  
+[2026-09-02 04:40:52] ==================================================
+[2026-09-02 04:40:52] 🚀 STARTING KUBERNETES SANDBOX LAB (k3d)
+[2026-09-02 04:40:52] ==================================================
+[2026-09-02 04:40:52] 🔍 Checking required tools...
+[2026-09-02 04:40:58] 🔍 Checking Docker/WSL2 resource allocation...
+[2026-09-02 04:41:04] ✅ Cluster 'enterprise-lab' already exists — skipping creation.
+[2026-09-02 04:41:04] ℹ️  NOTE: port mappings (80/443 for Ingress) and the reduced-MTU network are only set at
+[2026-09-02 04:41:04] ℹ️  cluster CREATION time. If this cluster predates either fix, run ./lab-down.sh then
+[2026-09-02 04:41:04] ℹ️  rerun this script to pick them up.
+[2026-09-02 04:41:07] ⏳ Waiting for all nodes to report Ready...
+[2026-09-02 04:41:10] ⏳ Waiting for core cluster components (CoreDNS, local-path-provisioner) to be ready...
+[2026-09-02 04:41:15] 📂 Ensuring namespaces exist...
+[2026-09-02 04:41:23] ⚠️  Postgres already exists and no POSTGRES_PASSWORD was exported — reusing the existing Secret's password to avoid breaking Odoo's DB auth.
+[2026-09-02 04:41:25] 🔐 Creating/updating Postgres credentials Secret (database + apps namespaces)...
+[2026-09-02 04:41:31] 📦 Applying Postgres tier first...
+[2026-09-02 04:41:38] ⏳ Waiting for Postgres to be ready before starting Odoo (dependency ordering)...
+[2026-09-02 04:41:38] ▶️  Postgres rollout...
+[2026-09-02 04:41:55] ⏳ (15s elapsed) Postgres rollout — pods: enterprise-postgres-67cbcbfccf-zt8zt:0/1  enterprise-postgres-6f749db485-k6ktj:1/1  
+[2026-09-02 04:42:12] ⏳ (30s elapsed) Postgres rollout — pods: enterprise-postgres-67cbcbfccf-zt8zt:0/1  enterprise-postgres-6f749db485-k6ktj:1/1  
+[2026-09-02 04:42:27] ✅ Postgres rollout completed in 45s
+[2026-09-02 04:42:28] 📦 Applying remaining application manifests (Odoo, quotas)...
+[2026-09-02 04:42:32] ⏳ Waiting for Odoo to become ready (the image is ~600MB, first pull can take several minutes on a normal connection)...
+[2026-09-02 04:42:33] ▶️  Odoo rollout...
+[2026-09-02 04:42:49] ⏳ (15s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:0/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:43:06] ⏳ (30s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:0/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:43:23] ⏳ (45s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:0/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:43:40] ⏳ (60s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:0/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:43:57] ⏳ (75s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:44:13] ⏳ (90s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:44:30] ⏳ (105s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:44:47] ⏳ (120s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:45:05] ⏳ (135s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:45:22] ⏳ (150s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:45:38] ⏳ (165s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:45:55] ⏳ (180s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:46:12] ⏳ (195s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:46:29] ⏳ (210s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:46:45] ⏳ (225s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:47:02] ⏳ (240s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:47:20] ⏳ (255s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:47:36] ⏳ (270s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:47:53] ⏳ (285s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:48:10] ⏳ (300s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:48:27] ⏳ (315s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:48:43] ⏳ (330s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:48:59] ⏳ (345s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:49:15] ⏳ (360s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
+[2026-09-02 04:49:31] ⏳ (375s elapsed) Odoo rollout — pods: odoo-app-544f7d588f-72ldd:1/1  odoo-app-6f5db9ffc9-8rnjt:0/1  
