@@ -206,12 +206,12 @@ spec:
           subPath: pgdata
         readinessProbe:
           exec:
-            command: ["pg_isready", "-U", "postgres", "-d", "postgres"]
+            command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
           initialDelaySeconds: 30
           periodSeconds: 10
         livenessProbe:
           exec:
-            command: ["pg_isready", "-U", "postgres", "-d", "postgres"]
+            command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
           initialDelaySeconds: 60
           periodSeconds: 20
         resources:
@@ -253,6 +253,26 @@ spec:
       labels:
         app: odoo
     spec:
+      initContainers:   # <-- ADD THIS BLOCK
+      - name: init-odoo-schema
+        image: odoo:17.0
+        env:
+        - name: HOST
+          value: enterprise-postgres.database.svc.cluster.local
+        - name: USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: POSTGRES_USER
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: POSTGRES_PASSWORD
+        command: ["bash", "-c"]
+        args:
+          - odoo -d odoo -i base --stop-after-init \
+              --db_host=$HOST --db_user=$USER --db_password=$PASSWORD  
       containers:
       - name: odoo
         image: odoo:17.0
@@ -335,16 +355,13 @@ run_with_heartbeat "Postgres rollout" "database" \
   kubectl -n database rollout status deployment/enterprise-postgres --timeout=180s
 
 
-log "🔧 Ensuring Odoo user and database exist in Postgres..."
-kubectl exec -n database deployment/enterprise-postgres -- \
-  psql -U postgres -d postgres -c "DO $$ BEGIN
-    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'odoo_user') THEN
-      CREATE ROLE odoo_user LOGIN PASSWORD '${POSTGRES_PASSWORD}';
-    END IF;
-    IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'odoo') THEN
-      CREATE DATABASE odoo OWNER odoo_user;
-    END IF;
-  END $$;" || true
++log "🔧 Ensuring Odoo user and database exist in Postgres..."
++kubectl exec -n database deployment/enterprise-postgres -- \
++  psql -U odoo_user -d postgres -c "DO $$ BEGIN
++    IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'odoo') THEN
++      CREATE DATABASE odoo OWNER odoo_user;
++    END IF;
++  END $$;" || true
 
 
 log "📦 Applying remaining application manifests (Odoo, quotas)..."
