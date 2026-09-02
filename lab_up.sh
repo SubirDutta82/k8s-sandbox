@@ -216,12 +216,12 @@ spec:
           subPath: pgdata
         readinessProbe:
           exec:
-            command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
+            command: ["pg_isready", "-U", "postgres", "-d", "postgres"]
           initialDelaySeconds: 30
           periodSeconds: 10
         livenessProbe:
           exec:
-            command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
+            command: ["pg_isready", "-U", "postgres", "-d", "postgres"]
           initialDelaySeconds: 60
           periodSeconds: 20
         resources:
