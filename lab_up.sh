@@ -343,6 +343,18 @@ log "⏳ Waiting for Postgres to be ready before starting Odoo (dependency order
 run_with_heartbeat "Postgres rollout" "database" \
   kubectl -n database rollout status deployment/enterprise-postgres --timeout=180s
 
+log "🔧 Ensuring Odoo user and database exist in Postgres..."
+kubectl exec -n database deployment/enterprise-postgres -- \
+  psql -U postgres -d postgres -c "DO \$\$ BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'odoo_user') THEN
+      CREATE ROLE odoo_user LOGIN PASSWORD '${POSTGRES_PASSWORD}';
+    END IF;
+    IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'odoo') THEN
+      CREATE DATABASE odoo OWNER odoo_user;
+    END IF;
+  END \$\$;" || true
+
+
 log "🔧 Ensuring Odoo database exists in Postgres..."
 kubectl exec -n database deployment/enterprise-postgres -- \
   psql -U odoo_user -d postgres -c "CREATE DATABASE odoo;" || true
