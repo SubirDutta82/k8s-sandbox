@@ -210,7 +210,6 @@ for ns in database apps; do
 done
 
 # ---------- 4. App manifest (references the Secret, adds probes/limits) ----------
-log "📝 Generating application manifest..."
 cat <<'EOF' > "$APP_MANIFEST"
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -262,6 +261,7 @@ spec:
             command: ["pg_isready", "-U", "odoo_user", "-d", "postgres"]
           initialDelaySeconds: 15
           periodSeconds: 10
+          timeoutSeconds: 3
         resources:
           requests:
             cpu: "100m"
@@ -318,6 +318,8 @@ spec:
             secretKeyRef:
               name: postgres-credentials
               key: POSTGRES_PASSWORD
+        - name: DB_NAME
+          value: odoo
         readinessProbe:
           httpGet:
             path: /web/login
