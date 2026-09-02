@@ -116,19 +116,37 @@ check_resources() {
   fi
 }
 
+# k3d's default cluster network uses Docker's standard 1500-byte MTU. Over
+# WSL2, the actual path from a container-inside-a-k3d-node out to the
+# internet goes through an extra bridge/NAT hop that a plain host-level
+# `docker pull` doesn't take — and that extra hop is where a real-path MTU
+# mismatch shows up as "connection reset by peer" mid-download on large
+# image layers (confirmed: host-level pulls of the same image succeed fine,
+# only in-cluster pulls reset). Using a dedicated network with a lower,
+# safer MTU (1400) avoids this.
+LAB_NETWORK="k3d-lab-net"
+ensure_lab_network() {
+  if ! docker network inspect "$LAB_NETWORK" >/dev/null 2>&1; then
+    log "🌐 Creating dedicated Docker network '${LAB_NETWORK}' with MTU 1400 (avoids in-cluster image-pull"
+    log "🌐 TCP resets over WSL2's extra bridge hop — see comment above for details)..."
+    docker network create --driver bridge --opt com.docker.network.driver.mtu=1400 "$LAB_NETWORK"
+  fi
+}
+
 # ---------- 0. Preflight ----------
 log "=================================================="
 log "🚀 STARTING KUBERNETES SANDBOX LAB (k3d)"
 log "=================================================="
 check_deps
 check_resources
+ensure_lab_network
 
 # ---------- 1. Cluster (idempotent) ----------
 if k3d cluster list 2>/dev/null | awk '{print $1}' | grep -qx "$CLUSTER_NAME"; then
   log "✅ Cluster '$CLUSTER_NAME' already exists — skipping creation."
-  log "ℹ️  NOTE: port mappings (80/443 for Ingress) are only set at cluster CREATION time."
-  log "ℹ️  If this cluster was created before Ingress support was added to this script,"
-  log "ℹ️  run ./lab-down.sh then rerun this script to pick up the new port mappings."
+  log "ℹ️  NOTE: port mappings (80/443 for Ingress) and the reduced-MTU network are only set at"
+  log "ℹ️  cluster CREATION time. If this cluster predates either fix, run ./lab-down.sh then"
+  log "ℹ️  rerun this script to pick them up."
 else
   log "🏗️  Spinning up k3d cluster '$CLUSTER_NAME' (1 server + 2 agents)..."
   run_with_heartbeat "Creating k3d cluster" "" \
@@ -137,6 +155,7 @@ else
     --agents 2 \
     -p "80:80@loadbalancer" \
     -p "443:443@loadbalancer" \
+    --network "$LAB_NETWORK" \
     --wait \
     --timeout 90s
 fi
