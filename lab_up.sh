@@ -584,7 +584,28 @@ if [[ "$INSTALL_MONITORING" == "true" ]]; then
     fi
   fi
 
-  helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+
+  CHART_VERSION="88.6.3"
+CHART_FILE="/tmp/kube-prometheus-stack-${CHART_VERSION}.tgz"
+
+if [[ ! -f "$CHART_FILE" ]]; then
+  log "Downloading kube-prometheus-stack chart ${CHART_VERSION}"
+
+  curl -fL \
+    --retry 10 \
+    --retry-delay 10 \
+    --retry-all-errors \
+    --connect-timeout 30 \
+    --max-time 1800 \
+    -o "$CHART_FILE" \
+    "https://github.com/prometheus-community/helm-charts/releases/download/kube-prometheus-stack-${CHART_VERSION}/kube-prometheus-stack-${CHART_VERSION}.tgz"
+
+  ok "Monitoring chart downloaded."
+else
+  ok "Using cached monitoring chart ${CHART_FILE}."
+fi
+
+helm upgrade --install monitoring "$CHART_FILE" \
     --namespace "$MONITORING_NAMESPACE" \
     --create-namespace \
     --set-string grafana.adminPassword="$GRAFANA_ADMIN_PASSWORD" \
